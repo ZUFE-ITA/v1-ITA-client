@@ -1,0 +1,6 @@
+{
+	"useTabs": true,
+	"htmlWhitespaceSensitivity": "ignore",
+	"semi": true,
+	"endOfLine": "lf"
+}
