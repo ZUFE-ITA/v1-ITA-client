@@ -5,6 +5,6 @@ export default {
 	},
 	article: {
 		title: "文章",
-		caption: "新闻 || 技术博客",
+		caption: "新闻, 技术博客",
 	},
 };
