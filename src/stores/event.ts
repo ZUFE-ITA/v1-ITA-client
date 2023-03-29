@@ -42,8 +42,14 @@ export const useEventStore = defineStore("event", () => {
 	}
 
 	function get_list() {
-		event.list().then((d) => {
-			update_event_info(...d.data);
+		return new Promise<event.EventInfo[]>((resolve, reject) => {
+			event
+				.list()
+				.then((d) => {
+					update_event_info(...d.data);
+					resolve(d.data);
+				})
+				.catch(reject);
 		});
 	}
 
