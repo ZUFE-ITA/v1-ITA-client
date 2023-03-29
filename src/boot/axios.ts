@@ -17,7 +17,7 @@ const api = axios.create({
 	baseURL:
 		import.meta.env.MODE === "development"
 			? "https://127.0.0.1:8000"
-			: "https://api.ita.idim.cc:8012/",
+			: "https://api-ita.idim.cc:8443/",
 	withCredentials: true,
 });
 
