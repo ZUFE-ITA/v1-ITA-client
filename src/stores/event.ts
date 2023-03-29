@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 import { event } from "@/lib/api/event";
 import { id2timestamp } from "@/lib/id";
 
@@ -22,15 +22,22 @@ export const useEventStore = defineStore("event", () => {
 		list.sort((a, b) => id2timestamp(b.id) - id2timestamp(a.id));
 	}
 
-	function get(id: string) {
-		const info = computed(() => {
+	function load(id: string) {
+		return new Promise<event.EventInfo>((resolve, reject) => {
 			const idx = list.findIndex((v) => v.id === id);
-			if (idx > -1) return list[idx];
-			return null;
+			if (idx > -1) return resolve(list[idx]);
+			event
+				.get(id)
+				.then((d) => {
+					update_event_info(d.data);
+					resolve(d.data);
+				})
+				.catch(reject);
 		});
-		if (info.value === null) {
-			event.get(id).then((d) => update_event_info(d.data));
-		}
+	}
+	function get(id: string) {
+		const info = ref<null | event.EventInfo>(null);
+		load(id).then((d) => (info.value = d));
 		return info;
 	}
 
@@ -40,17 +47,30 @@ export const useEventStore = defineStore("event", () => {
 		});
 	}
 
-	function create(data: event.EventCreateForm) {
+	function create(creator: string, data: event.EventCreateForm) {
 		return new Promise<event.EventInfo>((resolve, reject) => {
 			event
 				.create(data)
 				.then((d) => {
 					const id = d.data.id;
 					const info = {
+						creator,
 						id,
 						...data,
 						joined: false,
 					};
+					update_event_info(info);
+					resolve(info);
+				})
+				.catch(reject);
+		});
+	}
+
+	function update(info: event.EventInfo) {
+		return new Promise<event.EventInfo>((resolve, reject) => {
+			event
+				.update(info.id, info)
+				.then(() => {
 					update_event_info(info);
 					resolve(info);
 				})
@@ -90,5 +110,5 @@ export const useEventStore = defineStore("event", () => {
 			}
 		});
 	}
-	return { list, joined, get_list, create, join, exit, get };
+	return { list, joined, get_list, create, join, exit, get, load, update };
 });

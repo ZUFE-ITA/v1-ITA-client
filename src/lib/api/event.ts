@@ -32,6 +32,7 @@ export namespace event {
 
 	export interface EventInfo extends EventCreateForm {
 		id: string;
+		creator: string;
 		joined: boolean;
 	}
 	// TODO: 根据范围显示
@@ -52,5 +53,9 @@ export namespace event {
 
 	export function get(id: string) {
 		return request.post<EventInfo>(base(id));
+	}
+
+	export function update(id: string, form: EventCreateForm) {
+		return request.post(base(`update/${id}`), form);
 	}
 }

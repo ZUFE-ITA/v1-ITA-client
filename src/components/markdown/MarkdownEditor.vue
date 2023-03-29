@@ -3,9 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { Cherry, config } from "@/lib/markdown";
+import { onMounted, watch } from "vue";
 
+import { Cherry, config } from "@/lib/markdown";
 import "cherry-markdown/dist/cherry-markdown.css";
 import "./theme/fix-style.css";
 import { useThemeStore } from "@/stores/theme";
@@ -40,7 +40,11 @@ onMounted(() => {
 			},
 		},
 	});
+	watch(props, (p) => {
+		cherry.setValue(p.value ?? "");
+	});
 });
+
 defineExpose({
 	clear() {
 		cherry.setValue("");

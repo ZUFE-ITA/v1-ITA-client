@@ -2,8 +2,10 @@
 	<basic-card>
 		<q-card-section class="q-pt-xs" v-if="event">
 			<div class="text-overline">{{ event.organizer }}</div>
-			<div class="text-h5 q-mt-sm q-mb-xs break-all">{{ event.title }}</div>
-			<div class="break-all" v-html="renderMD(event.desc)"></div>
+			<div class="text-h5 q-mt-sm q-mb-xs break-all">
+				<div>{{ event.title }}</div>
+			</div>
+			<div class="break-all markdown-body" v-html="renderMD(event.desc)"></div>
 		</q-card-section>
 
 		<template v-else>
@@ -98,7 +100,10 @@ const options = computed(() => [
 ]);
 </script>
 
-<style scoped>
+<style>
+/* @import "@/css/github-markdown-light.css"; */
+@import "@/css/event.light.scss";
+
 .break-all {
 	word-break: break-all;
 }

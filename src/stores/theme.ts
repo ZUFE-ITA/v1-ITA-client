@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { defineStore } from "pinia";
 import { Dark } from "quasar";
 
@@ -26,10 +26,11 @@ export const useThemeStore = defineStore("theme", () => {
 					return false;
 			}
 		})();
-		document
-			.querySelector("html")
-			?.setAttribute("class", is_dark ? "dark" : "");
 		return is_dark;
+	});
+
+	watch(isDark, (d) => {
+		document.querySelector("html")?.setAttribute("class", d ? "dark" : "");
 	});
 
 	function switchTheme(to: Theme) {

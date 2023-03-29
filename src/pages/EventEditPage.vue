@@ -62,13 +62,23 @@
 					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 				/>
 
-				<div>
+				<q-input
+					type="textarea"
+					filled
+					v-model="desc"
+					label="活动简介(支持markdown)"
+					lazy-rules
+					autogrow
+					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
+				/>
+
+				<!-- <div>
 					<div class="text-h5">描述</div>
 					<markdown-editor
 						v-model:value="desc"
 						id="create-event-md-editor"
 					></markdown-editor>
-				</div>
+				</div> -->
 
 				<div>
 					<div class="text-h5">报名截止时间</div>
@@ -105,14 +115,15 @@
 <script setup lang="ts">
 import BasicCard from "@/components/card/BasicCard.vue";
 import InputDateTime from "@/components/input/InputDateTime.vue";
-import MarkdownEditor from "@/components/markdown/MarkdownEditor.vue";
 import { notifyErrorResponse } from "@/lib/api";
 import notify from "@/lib/notify";
 import { useEventStore } from "@/stores/event";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { cvtToUnix } from "@/lib/dayjs";
+import { useRoute, useRouter } from "vue-router";
+import dayjs from "@/lib/dayjs";
+import { useUserStore } from "@/stores/user";
 
+const user = useUserStore();
 const event = useEventStore();
 const router = useRouter();
 const organizer = ref("");
@@ -135,10 +146,42 @@ const max_count = ref();
 
 const desc = ref("");
 const longtime = ref(false);
-const range = ref({ from: "", to: "" });
-const st = ref("");
+const range = ref<{ from: string | number; to: string | number }>({
+	from: "",
+	to: "",
+});
+const st = ref<string>("");
+
+const route = useRoute();
+const id = route.params.id as string | undefined | null;
+
+const joined = ref(false);
+if (id) {
+	event.load(id).then((d) => {
+		organizer.value = d.organizer;
+		title.value = d.title;
+		addr.value = d.addr;
+		deadline.value = dayjs(d.deadline).format("YYYY-MM-DD HH:mm");
+		need_check.value = d.need_check;
+		with_point.value = d.with_point;
+		point_detail.value = d.point_detail ?? "";
+		with_reward.value = d.with_reward;
+		reward_detail.value = d.reward_detail ?? "";
+		limit_count.value = d.limit_count;
+		max_count.value = d.max_count;
+		desc.value = d.desc;
+		longtime.value = d.longtime;
+		range.value = {
+			from: dayjs(d.range?.start).format("YYYY/MM/DD"),
+			to: dayjs(d.range?.end).format("YYYY/MM/DD"),
+		};
+		st.value = dayjs(d.start).format("YYYY-MM-DD HH:mm");
+		joined.value = d.joined;
+	});
+}
 
 function onSubmit() {
+	if (!user.self.info?.id || !user.self.permission.Event.canAppend) return;
 	const data: any = {
 		title: title.value,
 		desc: desc.value,
@@ -149,20 +192,20 @@ function onSubmit() {
 		with_point: with_point.value,
 		with_reward: with_reward.value,
 		limit_count: limit_count.value,
-		deadline: cvtToUnix(deadline.value),
+		deadline: deadline.value,
 	};
 	if (longtime.value) {
 		if (range.value.from && range.value.to) {
 			data.range = {
-				start: cvtToUnix(range.value.from),
-				end: cvtToUnix(range.value.to),
+				start: range.value.from,
+				end: range.value.to,
 			};
 		} else {
 			notify.error("选择时间范围");
 		}
 	} else {
 		if (st.value) {
-			data.start = cvtToUnix(st.value);
+			data.start = st.value;
 		} else {
 			notify.error("选择结束时间");
 		}
@@ -176,13 +219,27 @@ function onSubmit() {
 	if (limit_count.value) {
 		data.max_count = max_count.value;
 	}
-	event
-		.create(data)
-		.then(() => {
-			notify.success("添加成功");
-			router.push("/");
-		})
-		.catch(notifyErrorResponse);
+	if (id) {
+		event
+			.update({
+				id,
+				creator: user.self.info.id,
+				joined: joined.value,
+				...data,
+			})
+			.then(() => {
+				notify.success("更新完成");
+				router.replace({ name: "event detail", params: { id } });
+			})
+			.catch(notifyErrorResponse);
+	} else
+		event
+			.create(user.self.info?.id, data)
+			.then(() => {
+				notify.success("添加成功");
+				router.push("/");
+			})
+			.catch(notifyErrorResponse);
 }
 function onReset() {
 	title.value = "";
