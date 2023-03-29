@@ -1,17 +1,18 @@
 <template>
 	<basic-card>
 		<q-card-section
-			horizontal
 			class="cursor-pointer"
 			@click="router.push({ name: 'event detail', params: { id: event.id } })"
 		>
-			<q-card-section class="q-pt-xs">
-				<div class="text-overline">{{ event.organizer }}</div>
-				<div class="text-h5 q-mt-sm q-mb-xs">{{ event.title }}</div>
-				<q-item-label :lines="1" class="text-caption text-grey">
-					{{ stripMarkdown(event.desc) }}
-				</q-item-label>
-			</q-card-section>
+			<q-item-label :lines="1" class="text-overline">
+				{{ event.organizer }}
+			</q-item-label>
+			<q-item-label :lines="1" class="text-h5 q-mt-sm q-mb-xs">
+				{{ event.title }}
+			</q-item-label>
+			<q-item-label :lines="1" class="text-caption text-grey">
+				{{ stripMarkdown(event.desc) }}
+			</q-item-label>
 		</q-card-section>
 
 		<q-separator />

@@ -2,8 +2,8 @@
 	<basic-card>
 		<q-card-section class="q-pt-xs" v-if="event">
 			<div class="text-overline">{{ event.organizer }}</div>
-			<div class="text-h5 q-mt-sm q-mb-xs">{{ event.title }}</div>
-			<div v-html="renderMD(event.desc)"></div>
+			<div class="text-h5 q-mt-sm q-mb-xs break-all">{{ event.title }}</div>
+			<div class="break-all" v-html="renderMD(event.desc)"></div>
 		</q-card-section>
 
 		<template v-else>
@@ -97,3 +97,9 @@ const options = computed(() => [
 	},
 ]);
 </script>
+
+<style scoped>
+.break-all {
+	word-break: break-all;
+}
+</style>
