@@ -1,5 +1,5 @@
 export type BaseOperation =
-	| "Append"
+	| "Write"
 	| "Vet"
 	| "DeleteSelf"
 	| "DeleteOthers"
@@ -10,7 +10,7 @@ export type ChallengeOperation = BaseOperation;
 
 export class BlogPermission {
 	static Read = "r";
-	static Append = "a";
+	static Write = "w";
 	static Vet = "v";
 	static DeleteSelf = "d";
 	static DeleteOthers = "D";
@@ -22,7 +22,7 @@ export class BlogPermission {
 
 export class ChallengePermission {
 	static Read = "r";
-	static Append = "a";
+	static Write = "w";
 	static Vet = "v";
 	static DeleteSelf = "d";
 	static DeleteOthers = "D";
@@ -34,7 +34,7 @@ export class ChallengePermission {
 
 export class EventPermission {
 	static Read = "r";
-	static Append = "a";
+	static Write = "w";
 	static Vet = "v";
 	static DeleteSelf = "d";
 	static DeleteOthers = "D";
@@ -48,14 +48,14 @@ export class EventPermission {
 export interface Permission {
 	Blog: {
 		canRead: Boolean;
-		canAppend: Boolean;
+		canWrite: Boolean;
 		canVet: Boolean;
 		canDeleteSelf: Boolean;
 		canDeleteOthers: Boolean;
 	};
 	Event: {
 		canRead: Boolean;
-		canAppend: Boolean;
+		canWrite: Boolean;
 		canVet: Boolean;
 		canDeleteSelf: Boolean;
 		canDeleteOthers: Boolean;
@@ -63,7 +63,7 @@ export interface Permission {
 	};
 	Challenge: {
 		canRead: Boolean;
-		canAppend: Boolean;
+		canWrite: Boolean;
 		canVet: Boolean;
 		canDeleteSelf: Boolean;
 		canDeleteOthers: Boolean;
@@ -83,7 +83,7 @@ function PermissionParser(per: string | null = null): Permission {
 	return {
 		Event: {
 			canRead: e[0] === EventPermission.Read,
-			canAppend: e[1] === EventPermission.Append,
+			canWrite: e[1] === EventPermission.Write,
 			canVet: e[2] === EventPermission.Vet,
 			canDeleteSelf: e[3] === EventPermission.DeleteSelf,
 			canDeleteOthers: e[4] === EventPermission.DeleteOthers,
@@ -91,14 +91,14 @@ function PermissionParser(per: string | null = null): Permission {
 		},
 		Blog: {
 			canRead: b[0] === BlogPermission.Read,
-			canAppend: b[1] === BlogPermission.Append,
+			canWrite: b[1] === BlogPermission.Write,
 			canVet: b[2] === BlogPermission.Vet,
 			canDeleteSelf: b[3] === BlogPermission.DeleteSelf,
 			canDeleteOthers: b[4] === BlogPermission.DeleteOthers,
 		},
 		Challenge: {
 			canRead: challenge[0] === ChallengePermission.Read,
-			canAppend: challenge[1] === ChallengePermission.Append,
+			canWrite: challenge[1] === ChallengePermission.Write,
 			canVet: challenge[2] === ChallengePermission.Vet,
 			canDeleteSelf: challenge[3] === ChallengePermission.DeleteSelf,
 			canDeleteOthers: challenge[4] === ChallengePermission.DeleteOthers,

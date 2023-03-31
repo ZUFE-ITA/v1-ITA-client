@@ -195,7 +195,7 @@ if (id) {
 }
 
 function onSubmit() {
-	if (!user.info?.id || !user.permission.Event.canAppend) return;
+	if (!user.info?.id || !user.permission.Event.canWrite) return;
 	const data: any = {
 		title: title.value,
 		desc: desc.value,

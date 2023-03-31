@@ -86,7 +86,7 @@ const treelist_props: TreeListProps[] = [
 				title: $t("sidebar.challenge.title"),
 				icon: "question_mark",
 				to: { name: "challenge list" },
-				hidden: () => !user.permission.Challenge.canAppend,
+				hidden: () => !user.permission.Challenge.canWrite,
 			},
 		],
 	},

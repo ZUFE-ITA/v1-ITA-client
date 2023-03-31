@@ -87,7 +87,7 @@ if (id) {
 	});
 }
 function onSubmit() {
-	if (!user.permission.Challenge.canAppend || !user.info) return;
+	if (!user.permission.Challenge.canWrite || !user.info) return;
 	if (id) {
 		challenge
 			.update({
