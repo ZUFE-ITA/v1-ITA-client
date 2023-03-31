@@ -1,9 +1,6 @@
 <template>
 	<toolbar-add-btn
-		v-if="
-			user.self.permission.Event.canAppend ||
-			user.self.permission.Blog.canAppend
-		"
+		v-if="user.permission.Event.canAppend || user.permission.Blog.canAppend"
 	></toolbar-add-btn>
 	<account-btn></account-btn>
 </template>

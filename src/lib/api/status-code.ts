@@ -11,6 +11,7 @@ export default {
 	1005: "error.form.email_conflict",
 	1006: "error.form.psw_too_simple",
 	1007: "error.form.no_format_error",
+	1008: "error.form.no_conflict",
 	// 登录
 	1010: "error.form.unknown_account",
 	1011: "error.form.unknown_email",

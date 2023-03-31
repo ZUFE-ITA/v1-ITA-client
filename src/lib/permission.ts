@@ -1,10 +1,12 @@
-export type BlogOperation =
-	| "Read"
+export type BaseOperation =
 	| "Append"
 	| "Vet"
 	| "DeleteSelf"
-	| "DeleteOthers";
-export type EventOperation = BlogOperation | "Join";
+	| "DeleteOthers"
+	| "Read";
+export type BlogOperation = BaseOperation;
+export type EventOperation = BaseOperation | "Join";
+export type ChallengeOperation = BaseOperation;
 
 export class BlogPermission {
 	static Read = "r";
@@ -15,6 +17,18 @@ export class BlogPermission {
 
 	static check(per: Permission, op: BlogOperation) {
 		return per.Blog[`can${op}`];
+	}
+}
+
+export class ChallengePermission {
+	static Read = "r";
+	static Append = "a";
+	static Vet = "v";
+	static DeleteSelf = "d";
+	static DeleteOthers = "D";
+
+	static check(per: Permission, op: ChallengeOperation) {
+		return per.Challenge[`can${op}`];
 	}
 }
 
@@ -47,11 +61,25 @@ export interface Permission {
 		canDeleteOthers: Boolean;
 		canJoin: Boolean;
 	};
+	Challenge: {
+		canRead: Boolean;
+		canAppend: Boolean;
+		canVet: Boolean;
+		canDeleteSelf: Boolean;
+		canDeleteOthers: Boolean;
+	};
 }
-
+const DEFAULT_PERMISSION = "r-----;r----;r----";
+const DEFAULT_GROUPS = DEFAULT_PERMISSION.split(";");
 function PermissionParser(per: string | null = null): Permission {
-	per ||= "r-----;r----";
-	const [e, b] = per.split(";");
+	per ||= DEFAULT_PERMISSION;
+	const groups = per.split(";");
+	if (groups.length < DEFAULT_GROUPS.length) {
+		for (let i = groups.length; i < DEFAULT_GROUPS.length; ++i) {
+			groups.push(DEFAULT_GROUPS[i]);
+		}
+	}
+	const [e, b, challenge] = groups;
 	return {
 		Event: {
 			canRead: e[0] === EventPermission.Read,
@@ -68,10 +96,14 @@ function PermissionParser(per: string | null = null): Permission {
 			canDeleteSelf: b[3] === BlogPermission.DeleteSelf,
 			canDeleteOthers: b[4] === BlogPermission.DeleteOthers,
 		},
+		Challenge: {
+			canRead: challenge[0] === ChallengePermission.Read,
+			canAppend: challenge[1] === ChallengePermission.Append,
+			canVet: challenge[2] === ChallengePermission.Vet,
+			canDeleteSelf: challenge[3] === ChallengePermission.DeleteSelf,
+			canDeleteOthers: challenge[4] === ChallengePermission.DeleteOthers,
+		},
 	};
 }
 
-export {
-	// check_permission,
-	PermissionParser,
-};
+export { PermissionParser };

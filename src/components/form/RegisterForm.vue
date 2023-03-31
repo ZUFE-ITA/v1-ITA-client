@@ -43,7 +43,7 @@ const psw1 = ref("");
 const psw2 = ref("");
 
 function onSubmit() {
-	user.self
+	user
 		.register({
 			mail: email.value,
 			psw: psw1.value,

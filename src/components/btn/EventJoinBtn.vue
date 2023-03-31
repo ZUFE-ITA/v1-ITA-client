@@ -1,10 +1,12 @@
 <template>
-	<q-btn flat color="primary" :disable="!canClick" @click="onClick">
+	<q-btn
+		flat
+		color="primary"
+		:disable="!canClick"
+		@click="onClick"
+		:loading="loading"
+	>
 		{{ btnText }}
-		<q-inner-loading
-			:showing="loading"
-			label-class="text-teal"
-		></q-inner-loading>
 	</q-btn>
 </template>
 
@@ -30,11 +32,13 @@ const canClick = computed(() => {
 	const deadline = dayjs(props.event.deadline);
 	const now = dayjs(new Date());
 	if (deadline.unix() < now.unix()) return false;
-	return user.self.permission.Event.canJoin;
+	return user.permission.Event.canJoin;
 });
 
 const btnText = computed(() => {
-	if (user.self.permission.Event.canJoin) {
+	if (!user.info) {
+		return $t("error.request.need_login_first");
+	} else if (user.permission.Event.canJoin) {
 		if (es.joined[props.event.id]) return $t("btn.has_joined");
 		else {
 			const deadline = dayjs(props.event.deadline);
@@ -43,10 +47,10 @@ const btnText = computed(() => {
 				return $t("error.event.deadline_has_passed");
 			return $t("btn.join");
 		}
-	} else if (user.self.info) {
-		return $t("error.request.permission_denied");
 	} else {
-		return $t("error.request.need_login_first");
+		console.log(user.permission);
+
+		return $t("error.request.permission_denied");
 	}
 });
 

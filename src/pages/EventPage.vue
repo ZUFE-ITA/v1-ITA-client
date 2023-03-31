@@ -5,10 +5,7 @@
 		<q-page-sticky
 			position="bottom-right"
 			:offset="[18, 18]"
-			v-if="
-				user.self.permission.Event.canAppend &&
-				user.self.info?.id === info?.creator
-			"
+			v-if="user.permission.Event.canAppend && user.info?.id === info?.creator"
 		>
 			<q-btn
 				color="primary"

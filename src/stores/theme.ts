@@ -29,9 +29,13 @@ export const useThemeStore = defineStore("theme", () => {
 		return is_dark;
 	});
 
-	watch(isDark, (d) => {
-		document.querySelector("html")?.setAttribute("class", d ? "dark" : "");
-	});
+	watch(
+		isDark,
+		(d) => {
+			document.querySelector("html")?.setAttribute("class", d ? "dark" : "");
+		},
+		{ immediate: true }
+	);
 
 	function switchTheme(to: Theme) {
 		behavior.value = to;
@@ -43,7 +47,12 @@ export const useThemeStore = defineStore("theme", () => {
 		if (behavior.value === Theme.FollowSys) Dark.set("auto");
 		else Dark.set(isDark.value);
 	}
-	return { behavior, isDark, switchTheme, apply };
+
+	const style = {
+		bg_auto: computed(() => (Dark.isActive ? "bg-dark" : "bg-white")),
+		text_auto: computed(() => (Dark.isActive ? "" : "text-white")),
+	};
+	return { behavior, isDark, switchTheme, apply, style };
 });
 
 export enum Theme {

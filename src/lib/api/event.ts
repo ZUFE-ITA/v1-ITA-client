@@ -13,6 +13,8 @@ export namespace event {
 		longtime: boolean;
 		range?: { start: number; end: number };
 		start?: number;
+		end?: number;
+		manual_stop: boolean;
 		with_point: boolean;
 		point_detail?: string;
 		with_reward: boolean;
@@ -21,6 +23,7 @@ export namespace event {
 		max_count?: number;
 		need_check: boolean;
 		deadline: number;
+		is_competition: boolean;
 	}
 
 	export interface EventCreateResult {

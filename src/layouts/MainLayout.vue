@@ -1,7 +1,7 @@
 <template>
 	<q-layout view="lHh Lpr lFf">
-		<q-header elevated>
-			<q-toolbar>
+		<q-header reveal :class="[theme.style.bg_auto]">
+			<q-toolbar class="text-primary">
 				<q-btn
 					flat
 					dense
@@ -18,13 +18,7 @@
 		</q-header>
 
 		<q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="200">
-			<q-list>
-				<EssentialLink
-					v-for="link in essentialLinks"
-					:key="link.title"
-					v-bind="link"
-				/>
-			</q-list>
+			<tree-list :value="treelist_props"></tree-list>
 		</q-drawer>
 
 		<q-page-container>
@@ -36,20 +30,68 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { $t } from "@/boot/i18n";
-
-import EssentialLink, {
-	EssentialLinkProps,
-} from "components/EssentialLink.vue";
+import { useThemeStore } from "@/stores/theme";
+import { TreeListProps } from "@/components/list/treelist";
+import TreeList from "@/components/list/TreeList.vue";
 import ToolbarBtnGroup from "@/components/ToolbarBtnGroup.vue";
+import { useUserStore } from "@/stores/user";
 
-const essentialLinks: EssentialLinkProps[] = [
+const user = useUserStore();
+const theme = useThemeStore();
+const treelist_props: TreeListProps[] = [
 	{
+		type: "item",
 		title: $t("sidebar.event.title"),
 		caption: $t("sidebar.event.caption"),
 		icon: "signal_cellular_alt",
 		to: "/",
 	},
 	{
+		type: "expension",
+		title: $t("sidebar.competition.title"),
+		// caption: $t("sidebar.competition.caption"),
+		icon: "emoji_events",
+		children: [
+			{
+				type: "item",
+				title: $t("competition.ongoing"),
+				// caption: $t("sidebar.event.caption"),
+				icon: "directions_run",
+				to: { name: "competition list", params: { type: "ongoing" } },
+			},
+			{
+				type: "item",
+				title: $t("competition.future"),
+				// caption: $t("sidebar.event.caption"),
+				icon: "update",
+				to: { name: "competition list", params: { type: "future" } },
+			},
+			{
+				type: "item",
+				title: $t("competition.expired"),
+				// caption: $t("sidebar.event.caption"),
+				icon: "last_page",
+				to: { name: "competition list", params: { type: "expired" } },
+			},
+		],
+	},
+	{
+		type: "expension",
+		title: $t("sidebar.manage.title"),
+		icon: "admin_panel_settings",
+		// hidden: ()=>
+		children: [
+			{
+				type: "item",
+				title: $t("sidebar.challenge.title"),
+				icon: "question_mark",
+				to: { name: "challenge list" },
+				hidden: () => !user.permission.Challenge.canAppend,
+			},
+		],
+	},
+	{
+		type: "item",
 		title: $t("sidebar.article.title"),
 		caption: $t("sidebar.article.caption"),
 		icon: "article",

@@ -25,6 +25,24 @@
 					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 				/>
 
+				<q-input
+					type="textarea"
+					filled
+					v-model="desc"
+					label="活动简介(支持markdown)"
+					lazy-rules
+					autogrow
+					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
+				/>
+
+				<!-- <div>
+					<div class="text-h5">描述</div>
+					<markdown-editor
+						v-model:value="desc"
+						id="create-event-md-editor"
+					></markdown-editor>
+				</div> -->
+				<q-toggle v-model="is_competition">同步创建比赛</q-toggle>
 				<q-toggle v-model="need_check">需要签到签退</q-toggle>
 
 				<q-toggle v-model="with_point">有学分奖励</q-toggle>
@@ -62,24 +80,6 @@
 					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 				/>
 
-				<q-input
-					type="textarea"
-					filled
-					v-model="desc"
-					label="活动简介(支持markdown)"
-					lazy-rules
-					autogrow
-					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
-				/>
-
-				<!-- <div>
-					<div class="text-h5">描述</div>
-					<markdown-editor
-						v-model:value="desc"
-						id="create-event-md-editor"
-					></markdown-editor>
-				</div> -->
-
 				<div>
 					<div class="text-h5">报名截止时间</div>
 					<input-date-time v-model="deadline"></input-date-time>
@@ -92,10 +92,19 @@
 					<q-date v-model="range" range />
 				</div>
 
-				<div v-else>
-					<div class="text-h5">开始时间</div>
-					<input-date-time v-model="st"></input-date-time>
-				</div>
+				<template v-else>
+					<div>
+						<div class="text-h5">开始时间</div>
+						<input-date-time v-model="st"></input-date-time>
+					</div>
+
+					<q-toggle v-model="manual_stop">手动停止</q-toggle>
+
+					<div v-show="!manual_stop">
+						<div class="text-h5">结束时间</div>
+						<input-date-time v-model="ed"></input-date-time>
+					</div>
+				</template>
 
 				<div>
 					<q-btn label="Submit" type="submit" color="primary" />
@@ -120,7 +129,7 @@ import notify from "@/lib/notify";
 import { useEventStore } from "@/stores/event";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import dayjs from "@/lib/dayjs";
+import dayjs, { cvtToUnix } from "@/lib/dayjs";
 import { useUserStore } from "@/stores/user";
 
 const user = useUserStore();
@@ -130,7 +139,7 @@ const organizer = ref("");
 
 const title = ref("");
 const addr = ref("");
-
+const is_competition = ref(false);
 const deadline = ref("");
 
 const need_check = ref(false);
@@ -150,7 +159,9 @@ const range = ref<{ from: string | number; to: string | number }>({
 	from: "",
 	to: "",
 });
-const st = ref<string>("");
+const st = ref("");
+const ed = ref("");
+const manual_stop = ref(true);
 
 const route = useRoute();
 const id = route.params.id as string | undefined | null;
@@ -161,6 +172,7 @@ if (id) {
 		organizer.value = d.organizer;
 		title.value = d.title;
 		addr.value = d.addr;
+		is_competition.value = d.is_competition;
 		deadline.value = dayjs(d.deadline).format("YYYY-MM-DD HH:mm");
 		need_check.value = d.need_check;
 		with_point.value = d.with_point;
@@ -176,12 +188,14 @@ if (id) {
 			to: dayjs(d.range?.end).format("YYYY/MM/DD"),
 		};
 		st.value = dayjs(d.start).format("YYYY-MM-DD HH:mm");
+		ed.value = dayjs(d.end).format("YYYY-MM-DD HH:mm");
+		manual_stop.value = d.manual_stop;
 		joined.value = d.joined;
 	});
 }
 
 function onSubmit() {
-	if (!user.self.info?.id || !user.self.permission.Event.canAppend) return;
+	if (!user.info?.id || !user.permission.Event.canAppend) return;
 	const data: any = {
 		title: title.value,
 		desc: desc.value,
@@ -193,7 +207,17 @@ function onSubmit() {
 		with_reward: with_reward.value,
 		limit_count: limit_count.value,
 		deadline: deadline.value,
+		is_competition: is_competition.value,
+		manual_stop: manual_stop.value,
 	};
+	if (!deadline.value) {
+		return notify.error("请输入报名截止时间");
+	}
+	const _dead = cvtToUnix(deadline.value);
+	const _now = dayjs().unix();
+	if (_dead <= _now) {
+		return notify.error("截止时间应该大于当前时间");
+	}
 	if (longtime.value) {
 		if (range.value.from && range.value.to) {
 			data.range = {
@@ -201,13 +225,26 @@ function onSubmit() {
 				end: range.value.to,
 			};
 		} else {
-			notify.error("选择时间范围");
+			return notify.error("选择时间范围");
 		}
 	} else {
 		if (st.value) {
 			data.start = st.value;
 		} else {
-			notify.error("选择结束时间");
+			return notify.error("选择开始时间");
+		}
+		if (!manual_stop.value && ed.value) {
+			data.end = ed.value;
+		} else if (!manual_stop.value) {
+			return notify.error("选择结束时间");
+		}
+		const _s = cvtToUnix(st.value),
+			_e = cvtToUnix(ed.value);
+		if (_s < _now) {
+			return notify.error("开始时间应该大于当前时间");
+		}
+		if (_s >= _e) {
+			return notify.error("结束时间早于开始时间了");
 		}
 	}
 	if (with_point.value) {
@@ -223,7 +260,7 @@ function onSubmit() {
 		event
 			.update({
 				id,
-				creator: user.self.info.id,
+				creator: user.info.id,
 				joined: joined.value,
 				...data,
 			})
@@ -234,7 +271,7 @@ function onSubmit() {
 			.catch(notifyErrorResponse);
 	} else
 		event
-			.create(user.self.info?.id, data)
+			.create(user.info?.id, data)
 			.then(() => {
 				notify.success("添加成功");
 				router.push("/");

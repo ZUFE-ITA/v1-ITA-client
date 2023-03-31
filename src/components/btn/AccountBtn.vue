@@ -1,16 +1,16 @@
 <template>
 	<div>
-		<avatar-btn v-if="user.self.exists" :id="user.self.info?.id"></avatar-btn>
+		<avatar-btn v-if="user.exists" :id="user.info?.id"></avatar-btn>
 		<q-menu v-model="showing">
 			<q-list style="min-width: 100px">
-				<q-item clickable v-close-popup @click="user.self.logout()">
+				<q-item clickable v-close-popup @click="user.logout()">
 					<q-item-section>{{ $t("operate.logout") }}</q-item-section>
 				</q-item>
 			</q-list>
 		</q-menu>
 	</div>
 
-	<login-btn v-if="!user.self.exists"></login-btn>
+	<login-btn v-if="!user.exists"></login-btn>
 </template>
 
 <script setup lang="ts">

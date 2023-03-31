@@ -24,13 +24,18 @@ const user = useUserStore();
 const options = computed(() => [
 	{
 		text: $t("btn.create_event"),
-		visible: user.self.permission.Event.canAppend,
+		visible: user.permission.Event.canAppend,
 		click: () => router.push({ name: "create event" }),
 	},
 	{
 		text: $t("btn.create_article"),
-		visible: user.self.permission.Blog.canAppend,
+		visible: user.permission.Blog.canAppend,
 		click: () => router.push({ name: "create article" }),
+	},
+	{
+		text: $t("btn.create_challenge"),
+		visible: user.permission.Challenge.canAppend,
+		click: () => router.push({ name: "create challenge" }),
 	},
 ]);
 </script>

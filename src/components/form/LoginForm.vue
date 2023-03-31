@@ -45,7 +45,7 @@ const $q = useQuasar();
 const router = useRouter();
 
 function onSubmit() {
-	user.self
+	user
 		.login({
 			mail: email.value,
 			psw: psw.value,

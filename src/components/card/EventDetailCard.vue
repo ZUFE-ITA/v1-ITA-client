@@ -5,7 +5,7 @@
 			<div class="text-h5 q-mt-sm q-mb-xs break-all">
 				<div>{{ event.title }}</div>
 			</div>
-			<div class="break-all markdown-body" v-html="renderMD(event.desc)"></div>
+			<markdown-block :text="event.desc"></markdown-block>
 		</q-card-section>
 
 		<template v-else>
@@ -56,12 +56,12 @@
 </template>
 
 <script setup lang="ts">
+import MarkdownBlock from "../MarkdownBlock.vue";
 import { computed } from "vue";
 import { useEventStore } from "@/stores/event";
 import BasicCard from "./BasicCard.vue";
 import { $t } from "@/boot/i18n";
 import dayjs from "@/lib/dayjs";
-import { renderMD } from "@/lib/markdown";
 import EventJoinBtn from "../btn/EventJoinBtn.vue";
 
 const props = defineProps<{
@@ -99,12 +99,3 @@ const options = computed(() => [
 	},
 ]);
 </script>
-
-<style>
-/* @import "@/css/github-markdown-light.css"; */
-@import "@/css/event.light.scss";
-
-.break-all {
-	word-break: break-all;
-}
-</style>

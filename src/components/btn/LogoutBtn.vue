@@ -19,7 +19,7 @@ function logout() {
 		cancel: true,
 		persistent: true,
 	}).onOk(() =>
-		user.self.logout().then(() => {
+		user.logout().then(() => {
 			$q.notify({
 				type: "positive",
 				progress: true,
