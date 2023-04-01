@@ -47,7 +47,13 @@
 					hint="赛题选择"
 					v-if="is_competition"
 					v-model="challenges"
+					@update:model-value="updateChallenges"
 				></select-challenges>
+				<input-challenge-score
+					v-if="challenges.length"
+					v-model="scores"
+				></input-challenge-score>
+
 				<q-toggle v-model="need_check">需要签到签退</q-toggle>
 
 				<q-toggle v-model="with_point">有学分奖励</q-toggle>
@@ -127,6 +133,9 @@
 </template>
 
 <script setup lang="ts">
+import InputChallengeScore, {
+	CellScore,
+} from "@/components/input/InputChallengeScore.vue";
 import BasicCard from "@/components/card/BasicCard.vue";
 import InputDateTime from "@/components/input/InputDateTime.vue";
 import SelectChallenges from "@/components/input/SelectChallenges.vue";
@@ -152,6 +161,7 @@ const addr = ref("");
 
 const is_competition = ref(false);
 const challenges = ref<comp.ChallengeInfo[]>([]);
+const scores = ref<CellScore[]>([]);
 
 const deadline = ref("");
 
@@ -180,6 +190,23 @@ const route = useRoute();
 const id = route.params.id as string | undefined | null;
 
 const joined = ref(false);
+
+function updateChallenges(cs: comp.ChallengeInfo[]) {
+	challenges.value = cs;
+	const new_arr: CellScore[] = [];
+	for (const c of cs) {
+		const cell = scores.value.find((v) => v.id === c.id);
+		if (cell) new_arr.push(cell);
+		else
+			new_arr.push({
+				id: c.id,
+				title: c.title,
+				score: 0,
+			});
+	}
+	scores.value = new_arr;
+}
+
 if (id) {
 	event.load(id).then((d) => {
 		organizer.value = d.organizer;
@@ -208,6 +235,11 @@ if (id) {
 			// 读取题目列表
 			competition.get_challenge_list(id).then((d) => {
 				challenges.value = d;
+				scores.value = d.map((d) => ({
+					title: d.title,
+					id: d.id,
+					score: d.score,
+				}));
 			});
 		}
 	});
@@ -308,7 +340,13 @@ function update_challenges(comp_id: string, challenges: comp.ChallengeInfo[]) {
 	return new Promise((resolve, reject) => {
 		if (is_competition.value) {
 			competition
-				.update_challenges(comp_id, ...challenges.map((d) => d.id))
+				.update_challenges(
+					comp_id,
+					...challenges.map((d) => ({
+						...d,
+						score: scores.value.find((v) => v.id === d.id)?.score ?? 0,
+					}))
+				)
 				.then(resolve)
 				.catch(notifyErrorResponse);
 		} else reject();

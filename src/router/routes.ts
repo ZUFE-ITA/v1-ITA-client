@@ -32,14 +32,26 @@ const routes: RouteRecordRaw[] = [
 				component: () => import("@/pages/CompetitionPanel.vue"),
 			},
 			{
-				path: ":cid/:id",
-				name: "competition challenge detail",
-				component: () => import("@/pages/ChallengeDetail.vue"),
-			},
-			{
-				path: ":id",
-				name: "competition detail",
+				path: "",
+				name: "competition detail page",
 				component: () => import("@/pages/CompetitionDetail.vue"),
+				children: [
+					{
+						path: "rank/:id",
+						name: "competition rank",
+						component: () => import("@/pages/CompetitionRankPage.vue"),
+					},
+					{
+						path: ":cid/:id",
+						name: "competition challenge detail",
+						component: () => import("@/pages/ChallengeDetail.vue"),
+					},
+					{
+						path: ":id",
+						name: "competition detail",
+						component: () => import("@/pages/CompetitionContextPage.vue"),
+					},
+				],
 			},
 		],
 	},

@@ -1,7 +1,7 @@
 <template>
 	<basic-card>
 		<div @click="$emit('clickCard')">
-			<q-card-section>
+			<q-card-section class="text-h6">
 				{{ title }}
 				<q-badge
 					v-if="status == 'positive'"
@@ -13,7 +13,9 @@
 				</q-badge>
 			</q-card-section>
 			<q-card-section>
-				<q-item-label :lines="1">{{ stripMarkdown(desc) }}</q-item-label>
+				<q-item-label :lines="1">
+					{{ stripMarkdown(desc) }}
+				</q-item-label>
 			</q-card-section>
 		</div>
 		<template v-if="slot.default">

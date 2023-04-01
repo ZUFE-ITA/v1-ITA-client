@@ -1,6 +1,6 @@
 <template>
 	<q-page class="q-pa-md q-gutter-md">
-		<event-detail-card class="event-card" :id="id"></event-detail-card>
+		<event-detail-card class="content-card" :id="id"></event-detail-card>
 
 		<q-page-sticky
 			position="bottom-right"
@@ -35,12 +35,3 @@ function edit() {
 	router.replace({ name: "edit event", params: { id } });
 }
 </script>
-
-<style scoped>
-@media screen and (min-width: 914px) {
-	.event-card {
-		width: 960px;
-		margin: 0 auto;
-	}
-}
-</style>

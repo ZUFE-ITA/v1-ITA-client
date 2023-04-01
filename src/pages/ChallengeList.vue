@@ -18,7 +18,7 @@
 				/>
 			</q-tabs>
 			<q-scroll-area
-				:style="{ height: `${scroll_height}px` }"
+				:style="{ height: `${scroll_height}px`, maxWidth: '100vw' }"
 				class="bg-page-auto"
 			>
 				<div class="row">

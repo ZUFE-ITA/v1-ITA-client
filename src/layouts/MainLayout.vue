@@ -1,6 +1,6 @@
 <template>
 	<q-layout view="lHh Lpr lFf">
-		<q-header reveal :class="[theme.style.bg_auto]">
+		<q-header reveal class="bg-header-auto">
 			<q-toolbar class="text-primary">
 				<q-btn
 					flat

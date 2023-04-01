@@ -4,4 +4,19 @@ html[class="dark"] {
 	.bg-page-auto {
 		background-color: #121212;
 	}
+	.bg-header-auto {
+		background: var(--q-dark);
+	}
 }
+
+.bg-header-auto {
+	background: var(--q-light);
+}
+
+// @media screen and (min-width: 914px) {
+// 	.content-card {
+// 		width: 960px;
+// 		margin-left: auto;
+// 		margin-right: auto;
+// 	}
+// }

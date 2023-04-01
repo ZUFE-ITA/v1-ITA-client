@@ -1,13 +1,6 @@
-import { user } from "./user";
-import { event } from "./event";
-import { competition as comp } from "./competition";
-import { challenge } from "./challenge";
-
 import statusCode from "./status-code";
 import notify from "../notify";
 import { $t } from "@/boot/i18n";
-
-export namespace api {}
 
 export function getErrResponseData(resp: any) {
 	return resp.response.data;

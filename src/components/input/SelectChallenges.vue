@@ -8,7 +8,6 @@
 		input-debounce="0"
 		:options="filterOptions"
 		@filter="filterFn"
-		style="width: 250px"
 	>
 		<template #option="scope">
 			<q-item clickable @click="scope.toggleOption(scope.opt)">
@@ -56,8 +55,8 @@ function filterFn(val: string, update: any) {
 	else {
 		// load list
 		challenges.get_list().then((d) => {
-			options.value = d;
-			use_update(d);
+			options.value = d as any;
+			use_update(d as any);
 		});
 	}
 }

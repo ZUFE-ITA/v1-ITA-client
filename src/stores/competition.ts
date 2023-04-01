@@ -63,10 +63,10 @@ export const useCompetitionStore = defineStore("competition", () => {
 		});
 	}
 
-	function update_challenges(comp_id: string, ...cha_ids: string[]) {
+	function update_challenges(comp_id: string, ...scores: competition.Score[]) {
 		return new Promise((resolve, reject) => {
 			competition
-				.update_challenges(comp_id, ...cha_ids)
+				.update_challenges(comp_id, ...scores)
 				.then(resolve)
 				.catch(reject);
 		});

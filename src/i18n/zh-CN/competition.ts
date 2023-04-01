@@ -6,4 +6,6 @@ export default {
 	enter: "进入比赛",
 	submit_flag: "提交Flag",
 	pass: "提交通过!",
+	context: "目录",
+	rank: "排名",
 };
