@@ -79,14 +79,21 @@ const treelist_props: TreeListProps[] = [
 		type: "expension",
 		title: $t("sidebar.manage.title"),
 		icon: "admin_panel_settings",
-		// hidden: ()=>
+		hidden: () =>
+			!(
+				user.permission.Challenge.canWrite || user.permission.Challenge.canRead
+			),
 		children: [
 			{
 				type: "item",
 				title: $t("sidebar.challenge.title"),
 				icon: "question_mark",
 				to: { name: "challenge list" },
-				hidden: () => !user.permission.Challenge.canWrite,
+				hidden: () =>
+					!(
+						user.permission.Challenge.canWrite ||
+						user.permission.Challenge.canRead
+					),
 			},
 		],
 	},
