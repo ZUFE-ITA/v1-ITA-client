@@ -9,13 +9,17 @@
 					filled
 					v-model="flag"
 					label="Flag"
-					hint="flag{...}"
 					lazy-rules
 					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 				/>
 
 				<div>
-					<q-btn label="Submit" type="submit" color="primary" />
+					<q-btn
+						label="Submit"
+						type="submit"
+						color="primary"
+						:loading="loading"
+					/>
 					<q-btn
 						label="Reset"
 						type="reset"
@@ -30,6 +34,9 @@
 </template>
 
 <script setup lang="ts">
+import { $t } from "@/boot/i18n";
+import { notifyErrorResponse } from "@/lib/api";
+import notify from "@/lib/notify";
 import { useCompetitionStore } from "@/stores/competition";
 import { ref } from "vue";
 import BasicCard from "./BasicCard.vue";
@@ -40,10 +47,18 @@ const props = defineProps<{
 
 const competition = useCompetitionStore();
 const flag = ref("");
+const loading = ref(false);
 function onReset() {
 	flag.value = "";
 }
 function onSubmit() {
-	// competitio
+	loading.value = true;
+	competition
+		.check_flag(props.comp_id, props.cha_id, flag.value)
+		.then(() => {
+			notify.success($t("competition.pass"));
+		})
+		.catch(notifyErrorResponse)
+		.finally(() => (loading.value = false));
 }
 </script>

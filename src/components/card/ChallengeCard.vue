@@ -1,7 +1,17 @@
 <template>
 	<basic-card>
 		<div @click="$emit('clickCard')">
-			<q-card-section>{{ title }}</q-card-section>
+			<q-card-section>
+				{{ title }}
+				<q-badge
+					v-if="status == 'positive'"
+					color="positive"
+					floating
+					transparent
+				>
+					HACKED
+				</q-badge>
+			</q-card-section>
 			<q-card-section>
 				<q-item-label :lines="1">{{ stripMarkdown(desc) }}</q-item-label>
 			</q-card-section>
@@ -22,6 +32,7 @@ import { stripMarkdown } from "@/lib/markdown";
 defineProps<{
 	title: string;
 	desc: string;
+	status?: "positive" | "negative";
 }>();
 defineEmits(["clickCard"]);
 const slot = useSlots();

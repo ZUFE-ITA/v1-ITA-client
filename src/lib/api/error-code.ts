@@ -42,8 +42,11 @@ export namespace ErrorCode {
 	}
 	export enum CHALLENGE {
 		NOT_FOUND = 3200,
+		FLAG_WRONG = 3201,
 	}
 	export enum COMPETITION {
 		NOT_FOUND = 3300,
+		ALREADY_PASSED = 3301,
+		FORBIDDEN = 3302,
 	}
 }

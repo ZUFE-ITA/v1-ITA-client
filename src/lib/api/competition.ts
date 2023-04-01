@@ -35,4 +35,8 @@ export namespace competition {
 	export function update_challenges(comp_id: string, ...cha_id: string[]) {
 		return request.post(base("update_challenges"), { comp_id, cha_id });
 	}
+
+	export function get_challenge_status(comp_id: string) {
+		return request.post(base(`challenge_status/${comp_id}`));
+	}
 }

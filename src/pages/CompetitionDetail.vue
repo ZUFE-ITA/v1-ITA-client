@@ -8,7 +8,13 @@
 			v-for="cha in challenges"
 			:key="cha.id"
 		>
-			<challenge-card :title="cha.title" :desc="cha.desc">
+			<challenge-card
+				:title="cha.title"
+				:desc="cha.desc"
+				:status="
+					competition.status[id][cha.id] === true ? 'positive' : 'negative'
+				"
+			>
 				<q-btn
 					rounded
 					flat
@@ -32,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import CompetitionDescCard from "@/components/card/CompetitionDescCard.vue";
 import { useEventStore } from "@/stores/event";
 import { useRoute } from "vue-router";
@@ -55,4 +61,8 @@ competition
 	})
 	.finally(() => (loading.value = false));
 const info = evt.get(id);
+
+onMounted(() => {
+	competition.load_statuses(id);
+});
 </script>

@@ -19,4 +19,10 @@ export default {
 	event: {
 		deadline_has_passed: "报名已截止",
 	},
+	challenge: {
+		flag_wrong: "Flag错误~~~",
+	},
+	competition: {
+		already_passed: "已经通过了~",
+	},
 };

@@ -1,10 +1,19 @@
 <template>
 	<q-page class="q-pa-md q-gutter-md">
-		<challenge-detail-card :value="info"></challenge-detail-card>
+		<challenge-detail-card
+			:value="info"
+			:status="color"
+		></challenge-detail-card>
+		<submit-flag-card
+			v-if="cid && !status"
+			:comp_id="cid"
+			:cha_id="id"
+		></submit-flag-card>
 	</q-page>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { competition as comp } from "@/lib/api/competition";
 import { useUserStore } from "@/stores/user";
 import { useRoute, useRouter } from "vue-router";
@@ -14,6 +23,7 @@ import ChallengeDetailCard from "@/components/card/ChallengeDetailCard.vue";
 import { ref } from "vue";
 import { useCompetitionStore } from "@/stores/competition";
 import { useChallengeStore } from "@/stores/challenge";
+import SubmitFlagCard from "@/components/card/SubmitFlagCard.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -29,7 +39,8 @@ const user = useUserStore();
 const evt = useEventStore();
 const competition = useCompetitionStore();
 const clg = useChallengeStore();
-
+const status = computed(() => (cid ? competition.status[cid]?.[id] : null));
+const color = computed(() => (status.value ? "positive" : undefined));
 const info = ref<comp.ChallengeInfo | undefined>();
 
 function forbidden() {
@@ -51,6 +62,7 @@ if (!id) {
 			if (!d.joined) forbidden();
 			if (!d.is_competition) forbidden();
 			competition.load_challenge(cid, id).then((d) => (info.value = d));
+			competition.load_statuses(cid);
 		})
 		.catch((resp) => {
 			notifyErrorResponse(resp);
