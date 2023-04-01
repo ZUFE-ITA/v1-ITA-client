@@ -43,7 +43,7 @@ export const useUserStore = defineStore("user-info", () => {
 				.catch(reject);
 		});
 	}
-	const users = reactive<user.UserInfo[]>([]);
+	const users = reactive<user.CommonUserInfo[]>([]);
 
 	// auth
 	user.auth().then((d) => {
@@ -52,7 +52,7 @@ export const useUserStore = defineStore("user-info", () => {
 	});
 
 	function get_info(id: string) {
-		return new Promise<user.UserInfo>((resolve, reject) => {
+		return new Promise<user.CommonUserInfo>((resolve, reject) => {
 			for (const user of users) {
 				if (user.id === id) {
 					resolve(user);

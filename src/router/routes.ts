@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
 				component: () => import("@/pages/CompetitionPanel.vue"),
 			},
 			{
-				path: ":competition_id/:challenge_id",
+				path: ":cid/:id",
 				name: "competition challenge detail",
 				component: () => import("@/pages/ChallengeDetail.vue"),
 			},
@@ -68,6 +68,11 @@ const routes: RouteRecordRaw[] = [
 			},
 		],
 	},
+	{
+		path: "/403",
+		name: "403",
+		component: () => import("@/pages/ErrorForbidden.vue"),
+	},
 	// { path: "article", component: () => import("pages/ArticlePage.vue") },
 	{
 		path: "/user",
@@ -81,6 +86,7 @@ const routes: RouteRecordRaw[] = [
 	},
 	{
 		path: "/:catchAll(.*)*",
+		name: "404",
 		component: () => import("pages/ErrorNotFound.vue"),
 	},
 ];

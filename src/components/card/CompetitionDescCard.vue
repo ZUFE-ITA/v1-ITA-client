@@ -2,8 +2,8 @@
 	<basic-card>
 		<q-item v-if="event">
 			<q-item-section>
-				<q-item-label>1</q-item-label>
-				<q-item-label>2</q-item-label>
+				<q-item-label class="text-overline">{{ event.organizer }}</q-item-label>
+				<q-item-label class="text-h6">{{ event.title }}</q-item-label>
 			</q-item-section>
 		</q-item>
 		<q-skeleton v-else type="text" width="100%"></q-skeleton>

@@ -41,7 +41,12 @@ export namespace user {
 		return request.post<UserInfo>(base("register"), data);
 	}
 
+	export interface CommonUserInfo {
+		username: string;
+		id: string;
+		signature: string | null;
+	}
 	export function info(id: string) {
-		return request.get<UserInfo>(base(id));
+		return request.get<CommonUserInfo>(base(id));
 	}
 }

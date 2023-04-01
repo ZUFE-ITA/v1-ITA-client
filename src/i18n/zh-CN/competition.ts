@@ -4,4 +4,5 @@ export default {
 	expired: "以前的",
 	desc: "简介",
 	enter: "进入比赛",
+	submit_flag: "提交Flag",
 };

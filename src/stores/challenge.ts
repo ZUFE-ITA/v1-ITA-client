@@ -1,17 +1,12 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
-import {
-	challenge,
-	ChallengeCreateForm,
-	ChallengeInfo,
-	ChallengeLabel,
-} from "@/lib/api/challenge";
+import { challenge } from "@/lib/api/challenge";
 import { id2timestamp } from "@/lib/id";
 
 export const useChallengeStore = defineStore("challenge", () => {
-	const list = reactive<ChallengeInfo[]>([]);
+	const list = reactive<challenge.ChallengeInfo[]>([]);
 
-	function update_info(...info: ChallengeInfo[]) {
+	function update_info(...info: challenge.ChallengeInfo[]) {
 		for (const i of info) {
 			const idx = list.findIndex((v) => v.id === i.id);
 			if (idx > -1) list[idx] = i;
@@ -21,7 +16,7 @@ export const useChallengeStore = defineStore("challenge", () => {
 	}
 
 	function load(id: string) {
-		return new Promise<ChallengeInfo>((resolve, reject) => {
+		return new Promise<challenge.ChallengeInfo>((resolve, reject) => {
 			const idx = list.findIndex((v) => v.id === id);
 			if (idx > -1) return resolve(list[idx]);
 			challenge
@@ -34,13 +29,13 @@ export const useChallengeStore = defineStore("challenge", () => {
 		});
 	}
 	function get(id: string) {
-		const info = ref<null | ChallengeInfo>(null);
+		const info = ref<null | challenge.ChallengeInfo>(null);
 		load(id).then((d) => (info.value = d));
 		return info;
 	}
 
-	function get_list(label: ChallengeLabel) {
-		return new Promise<ChallengeInfo[]>((resolve, reject) => {
+	function get_list(label: challenge.ChallengeLabel | undefined = undefined) {
+		return new Promise<challenge.ChallengeInfo[]>((resolve, reject) => {
 			challenge
 				.list(label)
 				.then((d) => {
@@ -51,8 +46,8 @@ export const useChallengeStore = defineStore("challenge", () => {
 		});
 	}
 
-	function create(creator: string, data: ChallengeCreateForm) {
-		return new Promise<ChallengeInfo>((resolve, reject) => {
+	function create(creator: string, data: challenge.ChallengeCreateForm) {
+		return new Promise<challenge.ChallengeInfo>((resolve, reject) => {
 			challenge
 				.create(data)
 				.then((d) => {
@@ -69,8 +64,8 @@ export const useChallengeStore = defineStore("challenge", () => {
 		});
 	}
 
-	function update(info: ChallengeInfo) {
-		return new Promise<ChallengeInfo>((resolve, reject) => {
+	function update(info: challenge.ChallengeInfo) {
+		return new Promise<challenge.ChallengeInfo>((resolve, reject) => {
 			challenge
 				.update(info.id, info)
 				.then(() => {

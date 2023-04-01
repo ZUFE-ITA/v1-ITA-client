@@ -43,6 +43,11 @@
 					></markdown-editor>
 				</div> -->
 				<q-toggle v-model="is_competition">同步创建比赛</q-toggle>
+				<select-challenges
+					hint="赛题选择"
+					v-if="is_competition"
+					v-model="challenges"
+				></select-challenges>
 				<q-toggle v-model="need_check">需要签到签退</q-toggle>
 
 				<q-toggle v-model="with_point">有学分奖励</q-toggle>
@@ -124,6 +129,8 @@
 <script setup lang="ts">
 import BasicCard from "@/components/card/BasicCard.vue";
 import InputDateTime from "@/components/input/InputDateTime.vue";
+import SelectChallenges from "@/components/input/SelectChallenges.vue";
+
 import { notifyErrorResponse } from "@/lib/api";
 import notify from "@/lib/notify";
 import { useEventStore } from "@/stores/event";
@@ -131,15 +138,21 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import dayjs, { cvtToUnix } from "@/lib/dayjs";
 import { useUserStore } from "@/stores/user";
+import { useCompetitionStore } from "@/stores/competition";
+import { competition as comp } from "@/lib/api/competition";
 
 const user = useUserStore();
 const event = useEventStore();
+const competition = useCompetitionStore();
+
 const router = useRouter();
 const organizer = ref("");
-
 const title = ref("");
 const addr = ref("");
+
 const is_competition = ref(false);
+const challenges = ref<comp.ChallengeInfo[]>([]);
+
 const deadline = ref("");
 
 const need_check = ref(false);
@@ -191,6 +204,12 @@ if (id) {
 		ed.value = dayjs(d.end).format("YYYY-MM-DD HH:mm");
 		manual_stop.value = d.manual_stop;
 		joined.value = d.joined;
+		if (is_competition.value) {
+			// 读取题目列表
+			competition.get_challenge_list(id).then((d) => {
+				challenges.value = d;
+			});
+		}
 	});
 }
 
@@ -243,7 +262,7 @@ function onSubmit() {
 		if (_s < _now) {
 			return notify.error("开始时间应该大于当前时间");
 		}
-		if (_s >= _e) {
+		if (_s >= _e && !manual_stop.value) {
 			return notify.error("结束时间早于开始时间了");
 		}
 	}
@@ -266,18 +285,36 @@ function onSubmit() {
 			})
 			.then(() => {
 				notify.success("更新完成");
-				router.replace({ name: "event detail", params: { id } });
+				update_challenges(id, challenges.value)
+					.then(() => router.replace({ name: "event detail", params: { id } }))
+					.catch(() =>
+						router.replace({ name: "event detail", params: { id } })
+					);
 			})
 			.catch(notifyErrorResponse);
 	} else
 		event
 			.create(user.info?.id, data)
-			.then(() => {
+			.then((info) => {
 				notify.success("添加成功");
-				router.push("/");
+				update_challenges(info.id, challenges.value)
+					.then(() => router.push("/"))
+					.catch(() => router.push("/"));
 			})
 			.catch(notifyErrorResponse);
 }
+
+function update_challenges(comp_id: string, challenges: comp.ChallengeInfo[]) {
+	return new Promise((resolve, reject) => {
+		if (is_competition.value) {
+			competition
+				.update_challenges(comp_id, ...challenges.map((d) => d.id))
+				.then(resolve)
+				.catch(notifyErrorResponse);
+		} else reject();
+	});
+}
+
 function onReset() {
 	title.value = "";
 	desc.value = "";

@@ -39,12 +39,20 @@ export default {
 	// 30xx: User问题
 	3000: "error.user.not_found",
 
-	// 40xx: Event问题
-	4001: "error.event.not_found",
-	4002: "error.event.has_joined",
-	4003: "error.event.exceeded_the_upper_limit",
-	4004: "error.event.not_joined",
-	4005: "error.event.deadline_has_passed",
+	// 31xx: Event问题
+	3101: "error.event.not_found",
+	3102: "error.event.has_joined",
+	3103: "error.event.exceeded_the_upper_limit",
+	3104: "error.event.not_joined",
+	3105: "error.event.deadline_has_passed",
+
+	// 32xx: Challenge问题
+	3200: "error.challenge.not_found",
+	3201: "error.challenge.flag_wrong",
+	// 33xx: Competition问题
+	3300: "error.competition.not_found",
+	3301: "error.competition.already_passed",
+	3302: "error.competition.forbidden",
 };
 
 import { ErrorCode } from "./error-code";

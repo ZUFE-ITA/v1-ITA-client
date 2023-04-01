@@ -4,4 +4,5 @@ export default {
 	create_challenge: "创建题目",
 	join: "报名",
 	has_joined: "已报名",
+	view: "查看",
 };

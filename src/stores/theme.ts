@@ -47,6 +47,7 @@ export const useThemeStore = defineStore("theme", () => {
 		if (behavior.value === Theme.FollowSys) Dark.set("auto");
 		else Dark.set(isDark.value);
 	}
+	apply();
 
 	const style = {
 		bg_auto: computed(() => (Dark.isActive ? "bg-dark" : "bg-white")),

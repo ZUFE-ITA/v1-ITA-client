@@ -12,7 +12,7 @@
 				<q-select
 					filled
 					v-model="label"
-					:options="CHALLENGE_LABELS"
+					:options="clg.CHALLENGE_LABELS"
 					lazy-rules
 					:rules="[
 						(val) => (val && val.length > 0) || 'Please choose something',
@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import BasicCard from "@/components/card/BasicCard.vue";
 import { ref } from "vue";
-import { CHALLENGE_LABELS } from "@/lib/api/challenge";
+import { challenge as clg } from "@/lib/api/challenge";
 import MarkdownBlock from "@/components/MarkdownBlock.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useChallengeStore } from "@/stores/challenge";

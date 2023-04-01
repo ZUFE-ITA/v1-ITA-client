@@ -10,7 +10,12 @@
 				narrow-indicator
 				ref="tabsRef"
 			>
-				<q-tab v-for="t in CHALLENGE_LABELS" :key="t" :label="t" :name="t" />
+				<q-tab
+					v-for="t in clg.CHALLENGE_LABELS"
+					:key="t"
+					:label="t"
+					:name="t"
+				/>
 			</q-tabs>
 			<q-scroll-area
 				:style="{ height: `${scroll_height}px` }"
@@ -22,7 +27,13 @@
 						:key="i"
 						class="col-12 col-sm-6 col-md-6 col-lg-4 q-pa-md"
 					>
-						<challenge-card :title="c.title" :desc="c.desc">
+						<challenge-card
+							:title="c.title"
+							:desc="c.desc"
+							@click-card="
+								$router.push({ name: 'challenge detail', params: { id: c.id } })
+							"
+						>
 							<q-btn
 								flat
 								rounded
@@ -50,20 +61,16 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
-import {
-	CHALLENGE_LABELS,
-	ChallengeLabel,
-	ChallengeInfo,
-} from "@/lib/api/challenge";
+import { challenge as clg } from "@/lib/api/challenge";
 import { useChallengeStore } from "@/stores/challenge";
 import { notifyErrorResponse } from "@/lib/api";
 import ChallengeCard from "@/components/card/ChallengeCard.vue";
 import ErrorVoid from "./ErrorVoid.vue";
 
 const challenge = useChallengeStore();
-const tab = ref<ChallengeLabel>(CHALLENGE_LABELS[0]);
+const tab = ref<clg.ChallengeLabel>(clg.CHALLENGE_LABELS[0]);
 const loading = ref(false);
-const clgs = ref<ChallengeInfo[]>([]);
+const clgs = ref<clg.ChallengeInfo[]>([]);
 watch(
 	tab,
 	(t) => {

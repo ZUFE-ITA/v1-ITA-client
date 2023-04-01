@@ -1,31 +1,58 @@
 <template>
 	<div class="q-pa-md">
-		<challenge-desc-card :event="info ?? undefined"></challenge-desc-card>
+		<competition-desc-card :event="info ?? undefined"></competition-desc-card>
 	</div>
 	<div class="row">
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 q-pa-md">
-			<q-card>题目列表</q-card>
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 q-pa-md">
-			<q-card>题目列表</q-card>
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 q-pa-md">
-			<q-card>题目列表</q-card>
-		</div>
-		<div class="col-12 col-sm-6 col-md-6 col-lg-4 q-pa-md">
-			<q-card>题目列表</q-card>
+		<div
+			class="col-12 col-sm-6 col-md-6 col-lg-4 q-pa-md"
+			v-for="cha in challenges"
+			:key="cha.id"
+		>
+			<challenge-card :title="cha.title" :desc="cha.desc">
+				<q-btn
+					rounded
+					flat
+					color="primary"
+					@click="
+						$router.push({
+							name: 'competition challenge detail',
+							params: { cid: id, id: cha.id },
+						})
+					"
+				>
+					{{ $t("btn.view") }}
+				</q-btn>
+			</challenge-card>
 		</div>
 	</div>
+
+	<q-inner-loading :showing="loading">
+		<q-spinner-gears size="50px" color="primary" />
+	</q-inner-loading>
 </template>
 
 <script setup lang="ts">
-import ChallengeDescCard from "@/components/card/ChallengeDescCard.vue";
+import { ref } from "vue";
+import CompetitionDescCard from "@/components/card/CompetitionDescCard.vue";
 import { useEventStore } from "@/stores/event";
 import { useRoute } from "vue-router";
+import ChallengeCard from "@/components/card/ChallengeCard.vue";
+import { useCompetitionStore } from "@/stores/competition";
+import { competition as comp } from "@/lib/api/competition";
 
 const route = useRoute();
 const id = route.params.id as string;
 const evt = useEventStore();
+const loading = ref(true);
 
+const competition = useCompetitionStore();
+const challenges = ref<comp.ChallengeInfo[]>([]);
+
+competition
+	.get_challenge_list(id)
+	.then((d) => {
+		challenges.value = d;
+	})
+	.finally(() => (loading.value = false));
 const info = evt.get(id);
 </script>

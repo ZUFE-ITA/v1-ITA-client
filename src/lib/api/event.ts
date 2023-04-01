@@ -1,5 +1,5 @@
 import request from "../request";
-
+// TODO: 把比赛相关的API迁移到 competition.ts
 export namespace event {
 	const base = (key: string) => {
 		return `/event/${key}`;
