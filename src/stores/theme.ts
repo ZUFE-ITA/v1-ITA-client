@@ -57,7 +57,7 @@ export const useThemeStore = defineStore("theme", () => {
 });
 
 export enum Theme {
-	Dark,
 	Light,
+	Dark,
 	FollowSys,
 }
