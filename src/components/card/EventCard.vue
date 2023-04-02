@@ -6,7 +6,7 @@
 	>
 		<template #desc>
 			<q-item-label :lines="1" class="text-caption text-grey">
-				{{ stripMarkdown(event.desc) }}
+				{{ event.desc }}
 			</q-item-label>
 		</template>
 		<template #action>
@@ -30,7 +30,6 @@
 import BasicInfoCard from "./BasicInfoCard.vue";
 import { event as evt } from "@/lib/api/event";
 import dayjs from "@/lib/dayjs";
-import { stripMarkdown } from "@/lib/markdown";
 
 defineProps<{
 	event: evt.EventInfo;
