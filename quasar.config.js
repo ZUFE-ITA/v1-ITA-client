@@ -10,6 +10,7 @@
 
 const { configure } = require("quasar/wrappers");
 const path = require("path");
+const config = require("./config");
 
 module.exports = configure(function (ctx) {
 	return {
@@ -67,7 +68,7 @@ module.exports = configure(function (ctx) {
 
 			// publicPath: '/',
 			// analyze: true,
-			// env: {},
+			env: ctx.dev ? config.dev : config.prod,
 			// rawDefine: {}
 			// ignorePublicFolder: true,
 			// minify: false,

@@ -279,7 +279,7 @@ function onSubmit() {
 	}
 	const _dead = cvtToUnix(deadline.value);
 	const _now = dayjs().unix();
-	if (_dead <= _now) {
+	if (_dead <= _now && !id) {
 		return notify.error("截止时间应该大于当前时间");
 	}
 	if (longtime.value) {
@@ -302,7 +302,7 @@ function onSubmit() {
 		}
 		const _s = cvtToUnix(st.value),
 			_e = cvtToUnix(ed.value);
-		if (_s < _now) {
+		if (_s < _now && !id) {
 			return notify.error("开始时间应该大于当前时间");
 		}
 		if (_s >= _e && !manual_stop.value) {

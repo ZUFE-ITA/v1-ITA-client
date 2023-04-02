@@ -14,10 +14,7 @@ declare module "@vue/runtime-core" {
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-	baseURL:
-		import.meta.env.MODE === "development"
-			? "https://127.0.0.1:8000"
-			: "https://api-ita.idim.cc:8443/",
+	baseURL: process.env.BASE_URL,
 	withCredentials: true,
 });
 

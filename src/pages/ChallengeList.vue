@@ -21,7 +21,7 @@
 				:style="{ height: `${scroll_height}px`, maxWidth: '100vw' }"
 				class="bg-page-auto"
 			>
-				<div class="row">
+				<div class="row" style="max-width: 100vw">
 					<div
 						v-for="(c, i) in clgs"
 						:key="i"
