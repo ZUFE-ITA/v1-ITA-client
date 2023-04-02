@@ -2,7 +2,7 @@
 	"name": "ita-client",
 	"version": "0.0.1",
 	"description": "ITA Client",
-	"productName": "ITA Client",
+	"productName": "ITA@ZUFE",
 	"author": "喵不嗷 <617802189@qq.com>",
 	"private": true,
 	"scripts": {

@@ -18,7 +18,7 @@
 		</div>
 	</div>
 
-	<error-void-page v-else></error-void-page>
+	<error-void-page v-if="!loading && !event.list.length"></error-void-page>
 
 	<q-inner-loading :showing="loading">
 		<q-spinner-gears size="50px" color="primary" />

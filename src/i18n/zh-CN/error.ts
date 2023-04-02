@@ -18,11 +18,14 @@ export default {
 	},
 	event: {
 		deadline_has_passed: "报名已截止",
+		is_not_manual_stop: "不是手动停止的活动",
+		has_stopped: "已停止",
 	},
 	challenge: {
 		flag_wrong: "Flag错误~~~",
 	},
 	competition: {
 		already_passed: "已经通过了~",
+		submission_closed: "已截止提交",
 	},
 };

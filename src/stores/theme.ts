@@ -49,11 +49,7 @@ export const useThemeStore = defineStore("theme", () => {
 	}
 	apply();
 
-	const style = {
-		bg_auto: computed(() => (Dark.isActive ? "bg-dark" : "bg-white")),
-		text_auto: computed(() => (Dark.isActive ? "" : "text-white")),
-	};
-	return { behavior, isDark, switchTheme, apply, style };
+	return { behavior, isDark, switchTheme, apply };
 });
 
 export enum Theme {

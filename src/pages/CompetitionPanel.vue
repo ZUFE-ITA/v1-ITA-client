@@ -39,32 +39,11 @@ import { useEventStore } from "@/stores/event";
 import EventCard from "@/components/card/EventCard.vue";
 import ErrorVoidPage from "./ErrorVoid.vue";
 import { useRoute } from "vue-router";
-import dayjs from "@/lib/dayjs";
-import { cvtToUnix } from "@/lib/dayjs";
-import { event } from "@/lib/api/event";
+import { switch_type } from "@/lib/api/event";
 import EventJoinBtn from "@/components/btn/EventJoinBtn.vue";
 const route = useRoute();
 const evt = useEventStore();
 
-function switch_type(v: event.EventInfo) {
-	const now = dayjs(new Date()).unix();
-	if (v.longtime) {
-		if (cvtToUnix(v.range?.start) > now) {
-			return "future";
-		} else if (cvtToUnix(v.range?.end) > now) {
-			return "ongoing";
-		} else {
-			return "expired";
-		}
-	}
-	if (cvtToUnix(v.start) > now) {
-		return "future";
-	} else if ((v.manual_stop && !v.end) || cvtToUnix(v.end) > now) {
-		return "ongoing";
-	} else {
-		return "expired";
-	}
-}
 const list = computed(() =>
 	evt.list.filter((d) => {
 		if (!d.is_competition) return false;

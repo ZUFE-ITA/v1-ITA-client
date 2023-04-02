@@ -143,7 +143,7 @@ import SelectChallenges from "@/components/input/SelectChallenges.vue";
 import { notifyErrorResponse } from "@/lib/api";
 import notify from "@/lib/notify";
 import { useEventStore } from "@/stores/event";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import dayjs, { cvtToUnix } from "@/lib/dayjs";
 import { useUserStore } from "@/stores/user";
@@ -191,6 +191,19 @@ const id = route.params.id as string | undefined | null;
 
 const joined = ref(false);
 
+watch(longtime, (v) => {
+	if (v) {
+		range.value = {
+			from: dayjs(st.value).format("YYYY/MM/DD"),
+			to: dayjs(ed.value).format("YYYY/MM/DD"),
+		};
+	} else {
+		st.value = dayjs(range.value.from).format("YYYY-MM-DD HH:mm");
+		ed.value = dayjs(range.value.to).format("YYYY-MM-DD HH:mm");
+		manual_stop.value = false;
+	}
+});
+
 function updateChallenges(cs: comp.ChallengeInfo[]) {
 	challenges.value = cs;
 	const new_arr: CellScore[] = [];
@@ -224,8 +237,8 @@ if (id) {
 		desc.value = d.desc;
 		longtime.value = d.longtime;
 		range.value = {
-			from: dayjs(d.range?.start).format("YYYY/MM/DD"),
-			to: dayjs(d.range?.end).format("YYYY/MM/DD"),
+			from: dayjs(d.start).format("YYYY/MM/DD"),
+			to: dayjs(d.end).format("YYYY/MM/DD"),
 		};
 		st.value = dayjs(d.start).format("YYYY-MM-DD HH:mm");
 		ed.value = dayjs(d.end).format("YYYY-MM-DD HH:mm");
@@ -259,7 +272,7 @@ function onSubmit() {
 		limit_count: limit_count.value,
 		deadline: deadline.value,
 		is_competition: is_competition.value,
-		manual_stop: manual_stop.value,
+		manual_stop: longtime.value ? false : manual_stop.value,
 	};
 	if (!deadline.value) {
 		return notify.error("请输入报名截止时间");
@@ -271,10 +284,8 @@ function onSubmit() {
 	}
 	if (longtime.value) {
 		if (range.value.from && range.value.to) {
-			data.range = {
-				start: range.value.from,
-				end: range.value.to,
-			};
+			data.start = range.value.from;
+			data.end = range.value.to;
 		} else {
 			return notify.error("选择时间范围");
 		}

@@ -13,10 +13,19 @@
 </template>
 
 <script setup lang="ts">
-import ThemeLightIcon from "@/components/icons/theme-light-icon.vue";
-import ThemeDefaultIcon from "@/components/icons/theme-os-default-icon.vue";
-import ThemeDarkIcon from "@/components/icons/theme-dark-icon.vue";
+import { defineAsyncComponent } from "vue";
 import { Theme, useThemeStore } from "@/stores/theme";
+
+const ThemeLightIcon = defineAsyncComponent(
+	() => import("@/components/icons/theme-light-icon.vue")
+);
+const ThemeDarkIcon = defineAsyncComponent(
+	() => import("@/components/icons/theme-dark-icon.vue")
+);
+const ThemeDefaultIcon = defineAsyncComponent(
+	() => import("@/components/icons/theme-os-default-icon.vue")
+);
+
 const theme = useThemeStore();
 function switchTheme() {
 	theme.switchTheme((theme.behavior + 1) % 3);

@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 import { computed, reactive, ref } from "vue";
 import { event } from "@/lib/api/event";
 import { id2timestamp } from "@/lib/id";
+import { ErrorCode } from "@/lib/api/error-code";
+import dayjs from "@/lib/dayjs";
+import { getErrCodeByResponse } from "@/lib/api";
 
 export const useEventStore = defineStore("event", () => {
 	const list = reactive<event.EventInfo[]>([]);
@@ -22,10 +25,12 @@ export const useEventStore = defineStore("event", () => {
 		list.sort((a, b) => id2timestamp(b.id) - id2timestamp(a.id));
 	}
 
-	function load(id: string) {
+	function load(id: string, force = false) {
 		return new Promise<event.EventInfo>((resolve, reject) => {
-			const idx = list.findIndex((v) => v.id === id);
-			if (idx > -1) return resolve(list[idx]);
+			if (!force) {
+				const idx = list.findIndex((v) => v.id === id);
+				if (idx > -1) return resolve(list[idx]);
+			}
 			event
 				.get(id)
 				.then((d) => {
@@ -116,5 +121,67 @@ export const useEventStore = defineStore("event", () => {
 			}
 		});
 	}
-	return { list, joined, get_list, create, join, exit, get, load, update };
+
+	function stop(id: string) {
+		return new Promise((resolve, reject) => {
+			load(id)
+				.then((info) => {
+					if (!info.end)
+						event
+							.stop(id)
+							.then(() => {
+								update_event_info({ ...info, end: dayjs(new Date()).unix() });
+								resolve(void 0);
+							})
+							.catch((resp) => {
+								if (getErrCodeByResponse(resp) == ErrorCode.EVENT.HAS_STOPPED) {
+									load(id, true).then((d) => {
+										update_event_info(d);
+										reject(resp);
+									});
+								} else reject(resp);
+							});
+				})
+				.catch(reject);
+		});
+	}
+
+	function restart(id: string) {
+		return new Promise((resolve, reject) => {
+			load(id)
+				.then((info) => {
+					if (info.end)
+						event
+							.restart(id)
+							.then(() => {
+								update_event_info({ ...info, end: undefined });
+								resolve(void 0);
+							})
+							.catch((resp) => {
+								// 同步信息
+								if (getErrCodeByResponse(resp) == ErrorCode.EVENT.NOT_STOP) {
+									load(id, true).then((d) => {
+										update_event_info(d);
+										reject(resp);
+									});
+								} else reject(resp);
+							});
+				})
+				.catch(reject);
+		});
+	}
+
+	return {
+		list,
+		joined,
+		get_list,
+		create,
+		join,
+		exit,
+		get,
+		load,
+		update,
+		stop,
+		restart,
+	};
 });

@@ -1,5 +1,27 @@
 import request from "../request";
 // TODO: 把比赛相关的API迁移到 competition.ts
+import dayjs, { cvtToUnix } from "../dayjs";
+
+export function switch_type(v: event.EventInfo) {
+	const now = dayjs(new Date()).unix();
+	if (v.longtime) {
+		if (cvtToUnix(v.range?.start) > now) {
+			return "future";
+		} else if (cvtToUnix(v.range?.end) > now) {
+			return "ongoing";
+		} else {
+			return "expired";
+		}
+	}
+	if (cvtToUnix(v.start) > now) {
+		return "future";
+	} else if ((v.manual_stop && !v.end) || cvtToUnix(v.end) > now) {
+		return "ongoing";
+	} else {
+		return "expired";
+	}
+}
+
 export namespace event {
 	const base = (key: string) => {
 		return `/event/${key}`;
@@ -60,5 +82,12 @@ export namespace event {
 
 	export function update(id: string, form: EventCreateForm) {
 		return request.post(base(`update/${id}`), form);
+	}
+
+	export function stop(id: string) {
+		return request.post(base(`stop/${id}`));
+	}
+	export function restart(id: string) {
+		return request.post(base(`restart/${id}`));
 	}
 }

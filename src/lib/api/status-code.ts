@@ -45,6 +45,9 @@ export default {
 	3103: "error.event.exceeded_the_upper_limit",
 	3104: "error.event.not_joined",
 	3105: "error.event.deadline_has_passed",
+	3106: "error.event.is_not_manual_stop",
+	3107: "error.event.has_stopped",
+	3108: "error.event.not_stop",
 
 	// 32xx: Challenge问题
 	3200: "error.challenge.not_found",
@@ -53,6 +56,7 @@ export default {
 	3300: "error.competition.not_found",
 	3301: "error.competition.already_passed",
 	3302: "error.competition.forbidden",
+	3303: "error.competition.submission_closed",
 };
 
 import { ErrorCode } from "./error-code";
