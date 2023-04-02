@@ -22,17 +22,32 @@
 		/>
 	</q-tabs>
 	<q-page-sticky
+		class="z-notify"
 		position="bottom-right"
 		:offset="[18, 18]"
 		v-if="info && user.permission.Event.canWrite"
 	>
-		<q-btn
+		<q-fab
+			vertical-actions-align="right"
 			color="primary"
-			round
-			:icon="info.end ? 'start' : 'stop'"
-			size="1.25em"
-			@click="toggleEventStatus"
-		></q-btn>
+			icon="keyboard_arrow_up"
+			direction="up"
+		>
+			<q-fab-action
+				label-position="left"
+				color="primary"
+				:icon="info.end ? 'start' : 'stop'"
+				:label="info.end ? 'start' : 'stop'"
+				@click="toggleEventStatus"
+			/>
+			<q-fab-action
+				label-position="left"
+				color="secondary"
+				icon="edit"
+				@click="$router.push({ name: 'edit event', params: { id } })"
+				:label="$t('competition.edit')"
+			/>
+		</q-fab>
 	</q-page-sticky>
 	<router-view></router-view>
 </template>

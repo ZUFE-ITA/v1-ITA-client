@@ -8,4 +8,5 @@ export default {
 	pass: "提交通过!",
 	context: "目录",
 	rank: "排名",
+	edit: "编辑",
 };

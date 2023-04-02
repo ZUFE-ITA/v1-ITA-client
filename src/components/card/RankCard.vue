@@ -30,16 +30,22 @@ const cols: any = [
 		field: (row: any) => h(UserAvatar, { id: row.uid }),
 	},
 	{
+		name: "score",
+		label: "score",
+		field: "score",
+		align: "center",
+	},
+	{
 		name: "count",
 		label: "count",
 		field: "count",
 		align: "center",
 	},
-	{
-		name: "AVG Time",
-		label: "AVG Time",
-		field: "avg_time",
-		align: "center",
-	},
+	// {
+	// 	name: "AVG Time",
+	// 	label: "AVG Time",
+	// 	field: "avg_time",
+	// 	align: "center",
+	// },
 ];
 </script>
