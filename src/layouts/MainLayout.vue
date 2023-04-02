@@ -30,14 +30,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { $t } from "@/boot/i18n";
-import { useThemeStore } from "@/stores/theme";
 import { TreeListProps } from "@/components/list/treelist";
 import TreeList from "@/components/list/TreeList.vue";
 import ToolbarBtnGroup from "@/components/ToolbarBtnGroup.vue";
 import { useUserStore } from "@/stores/user";
 
 const user = useUserStore();
-const theme = useThemeStore();
 const treelist_props: TreeListProps[] = [
 	{
 		type: "item",
@@ -79,21 +77,14 @@ const treelist_props: TreeListProps[] = [
 		type: "expension",
 		title: $t("sidebar.manage.title"),
 		icon: "admin_panel_settings",
-		hidden: () =>
-			!(
-				user.permission.Challenge.canWrite || user.permission.Challenge.canRead
-			),
+		hidden: () => !user.permission.Challenge.canWrite,
 		children: [
 			{
 				type: "item",
 				title: $t("sidebar.challenge.title"),
 				icon: "question_mark",
 				to: { name: "challenge list" },
-				hidden: () =>
-					!(
-						user.permission.Challenge.canWrite ||
-						user.permission.Challenge.canRead
-					),
+				hidden: () => !user.permission.Challenge.canWrite,
 			},
 		],
 	},
