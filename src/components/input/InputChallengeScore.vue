@@ -5,7 +5,6 @@
 			:columns="columns"
 			title="分值"
 			:rows-per-page-options="[]"
-			hide-bottom
 		>
 			<template v-slot:body="props">
 				<q-tr :props="props">

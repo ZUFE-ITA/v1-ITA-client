@@ -9,6 +9,22 @@ html[class="dark"] {
 	}
 }
 
+.q-markdown--link,
+.q-markdown--link-external {
+	&:link {
+		color: var(--q-primary);
+	}
+	&:visited {
+		color: var(--q-info);
+	}
+	&:hover {
+		color: var(--q-secondary);
+	}
+	&:active {
+		color: var(--q-accent);
+	}
+}
+
 .bg-header-auto {
 	background: var(--q-light);
 }

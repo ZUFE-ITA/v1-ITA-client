@@ -23,6 +23,7 @@
 					filled
 					v-model="flag"
 					label="flag"
+					hint="like: flag{xxxx}"
 					lazy-rules
 					:rules="[(val) => (val && val.length > 0) || 'Please type something']"
 				/>
@@ -71,7 +72,7 @@ import { notifyErrorResponse } from "@/lib/api";
 const title = ref("");
 const desc = ref("");
 const label = ref("");
-const flag = ref("flag{}");
+const flag = ref("");
 
 const router = useRouter();
 const route = useRoute();

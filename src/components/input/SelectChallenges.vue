@@ -7,6 +7,7 @@
 		multiple
 		input-debounce="0"
 		:options="filterOptions"
+		@update:model-value="updateFilterOptions"
 		@filter="filterFn"
 	>
 		<template #option="scope">
@@ -36,6 +37,19 @@ const value = useVModel(props, "modelValue", emit);
 const options = ref<comp.ChallengeInfo[] | null>(null);
 const filterOptions = ref<comp.ChallengeInfo[]>([]);
 const challenges = useChallengeStore();
+let filter_val = "";
+
+function updateFilterOptions(value: comp.ChallengeInfo[]) {
+	filterOptions.value =
+		options.value?.filter(
+			(d) => value.findIndex((v) => d.id === v.id) === -1
+		) ?? [];
+	filter_val = filter_val.trim();
+	if (filter_val !== "")
+		filterOptions.value = filterOptions.value.filter(
+			(v) => v.title.toLowerCase().indexOf(filter_val) > -1
+		);
+}
 
 function filterFn(val: string, update: any) {
 	const opt = options.value;
@@ -45,10 +59,15 @@ function filterFn(val: string, update: any) {
 				filterOptions.value = opt;
 			} else {
 				const needle = val.toLowerCase();
+				filter_val = needle;
 				filterOptions.value = opt.filter(
 					(v) => v.title.toLowerCase().indexOf(needle) > -1
 				);
 			}
+
+			filterOptions.value = filterOptions.value.filter(
+				(d) => !(value.value.findIndex((v) => v.id === d.id) > -1)
+			);
 		});
 	}
 	if (opt !== null) use_update(opt);
