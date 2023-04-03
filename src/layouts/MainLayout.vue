@@ -58,7 +58,7 @@ import ToolbarBtnGroup from "@/components/ToolbarBtnGroup.vue";
 import { useUserStore } from "@/stores/user";
 
 const user = useUserStore();
-const selected = ref("");
+
 const options = computed(() =>
 	[
 		{

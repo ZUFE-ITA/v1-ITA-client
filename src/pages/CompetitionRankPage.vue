@@ -27,7 +27,7 @@ onMounted(() => {
 			} else if (a.count != a.count) {
 				return b.count - a.count;
 			} else {
-				return b.avg_time - a.avg_time;
+				return a.avg_time - b.avg_time;
 			}
 		});
 		rank.value = d.data;

@@ -11,8 +11,11 @@
 
 <script setup lang="ts">
 import { competition } from "@/lib/api/competition";
+import { useUserStore } from "@/stores/user";
 import { h } from "vue";
 import UserAvatar from "../UserAvatar.vue";
+const user = useUserStore();
+
 defineProps<{
 	value: competition.RankItem[];
 }>();
@@ -24,20 +27,26 @@ const cols: any = [
 		align: "center",
 	},
 	{
+		name: "name",
+		label: "Name",
+		align: "center",
+		field: (row: any) => user.get_info(row.uid).value?.username,
+	},
+	{
 		name: "uid",
-		label: "uid",
+		label: "User",
 		align: "center",
 		field: (row: any) => h(UserAvatar, { id: row.uid }),
 	},
 	{
 		name: "score",
-		label: "score",
+		label: "Score",
 		field: "score",
 		align: "center",
 	},
 	{
 		name: "count",
-		label: "count",
+		label: "Count",
 		field: "count",
 		align: "center",
 	},

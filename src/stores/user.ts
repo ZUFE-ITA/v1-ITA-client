@@ -7,6 +7,7 @@ export const useUserStore = defineStore("user-info", () => {
 	const info = ref<null | user.UserInfo>(null);
 	const exists = computed(() => info.value !== null);
 	const permission = computed(() => PermissionParser(info.value?.permission));
+	const loading_queue: any = {}; // uid=>bool 表示是否正在从服务器获取对应用户的info
 
 	function login(form: user.LoginForm) {
 		return new Promise<user.UserInfo>((resolve, reject) => {
@@ -51,7 +52,8 @@ export const useUserStore = defineStore("user-info", () => {
 		users.push(d.data);
 	});
 
-	function get_info(id: string) {
+	// load info 方法不对外暴露, 因为要维持一个loading queue
+	function load_info(id: string) {
 		return new Promise<user.CommonUserInfo>((resolve, reject) => {
 			for (const user of users) {
 				if (user.id === id) {
@@ -59,15 +61,37 @@ export const useUserStore = defineStore("user-info", () => {
 					return;
 				}
 			}
-			user
-				.info(id)
-				.then((d) => {
-					const user = d.data;
-					users.push(user);
-					resolve(user);
-				})
-				.catch(reject);
+			if (!loading_queue[id]) {
+				loading_queue[id] = true;
+				user
+					.info(id)
+					.then((d) => {
+						const user = d.data;
+						users.push(user);
+						resolve(user);
+					})
+					.catch(reject)
+					.finally(() => {
+						loading_queue[id] = false;
+					});
+			}
 		});
 	}
-	return { users, info, permission, exists, logout, login, register, get_info };
+
+	function get_info(id: string) {
+		const info = computed(() => users.find((v) => v.id === id));
+		if (!info.value) load_info(id);
+		return info;
+	}
+
+	return {
+		users,
+		info,
+		permission,
+		exists,
+		logout,
+		login,
+		register,
+		get_info,
+	};
 });
