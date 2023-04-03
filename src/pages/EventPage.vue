@@ -23,6 +23,9 @@ import EventDetailCard from "@/components/card/EventDetailCard.vue";
 import { useEventStore } from "@/stores/event";
 import { useUserStore } from "@/stores/user";
 import { useRoute, useRouter } from "vue-router";
+import { watch } from "vue";
+import CONFIG from "../../package.json";
+
 const route = useRoute();
 const router = useRouter();
 const id = route.params.id as string;
@@ -30,7 +33,9 @@ const id = route.params.id as string;
 const user = useUserStore();
 const event = useEventStore();
 const info = event.get(id);
-
+watch(info, (d) => {
+	document.title = `${d?.title} | ${CONFIG.productName}`;
+});
 function edit() {
 	router.replace({ name: "edit event", params: { id } });
 }

@@ -7,7 +7,7 @@ import {
 } from "vue-router";
 
 import routes from "./routes";
-
+import CONFIG from "../../package.json";
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -34,5 +34,13 @@ export default route(function (/* { store, ssrContext } */) {
 		history: createHistory(process.env.VUE_ROUTER_BASE),
 	});
 
+	Router.beforeEach((to, from, next) => {
+		if (to.meta.title) {
+			document.title = `${to.meta.title} | ${CONFIG.productName}`;
+		} else {
+			document.title = CONFIG.productName;
+		}
+		next();
+	});
 	return Router;
 });

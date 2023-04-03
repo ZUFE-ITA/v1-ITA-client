@@ -4,6 +4,9 @@ const routes: RouteRecordRaw[] = [
 	{
 		path: "/",
 		name: "event",
+		meta: {
+			title: "Event",
+		},
 		component: () => import("pages/EventList.vue"),
 	},
 	{
@@ -24,6 +27,10 @@ const routes: RouteRecordRaw[] = [
 	{
 		path: "/competition",
 		name: "competition page",
+
+		meta: {
+			title: "Competition",
+		},
 		component: () => import("@/pages/CompetitionPage.vue"),
 		children: [
 			{
@@ -57,6 +64,9 @@ const routes: RouteRecordRaw[] = [
 	},
 	{
 		path: "/challenge",
+		meta: {
+			title: "Challenge",
+		},
 		children: [
 			{
 				path: "",
@@ -92,6 +102,9 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: "login",
 				name: "login",
+				meta: {
+					title: "Login",
+				},
 				component: () => import("@/pages/LoginPage.vue"),
 			},
 		],
