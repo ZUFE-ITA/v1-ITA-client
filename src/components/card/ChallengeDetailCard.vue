@@ -1,7 +1,17 @@
 <template>
 	<basic-card v-if="value">
-		<q-card-section class="text-h6">
+		<q-card-section class="text-h6 justify-between flex">
 			{{ value.title }}
+			<q-btn
+				flat
+				round
+				icon="edit"
+				color="secondary"
+				v-if="user.permission.Challenge.canWrite"
+				@click="
+					$router.push({ name: 'edit challenge', params: { id: value?.id } })
+				"
+			/>
 			<q-badge
 				v-if="status == 'positive'"
 				color="positive"
@@ -24,8 +34,11 @@
 import { competition as comp } from "@/lib/api/competition";
 import BasicCard from "./BasicCard.vue";
 import MarkdownBlock from "../MarkdownBlock.vue";
+import { useUserStore } from "@/stores/user";
 defineProps<{
 	value?: comp.ChallengeInfo;
 	status?: "positive" | "negative";
 }>();
+
+const user = useUserStore();
 </script>

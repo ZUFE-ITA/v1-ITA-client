@@ -54,7 +54,8 @@ if (!id) {
 		!(user.permission.Challenge.canRead || user.permission.Challenge.canWrite)
 	) {
 		forbidden();
-	} else clg.load(id).then((d) => (info.value = d));
+	} else clg.load(id).then((d) => (info.value = d as any));
+	// !如果要展示score的话就不能用clg.load接口了
 } else {
 	evt
 		.load(cid)

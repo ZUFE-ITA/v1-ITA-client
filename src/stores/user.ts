@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed, reactive, watch } from "vue";
+import { ref, computed, reactive } from "vue";
 import { user } from "@/lib/api/user";
 import { PermissionParser } from "@/lib/permission";
 
