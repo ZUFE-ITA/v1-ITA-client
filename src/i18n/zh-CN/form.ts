@@ -14,7 +14,7 @@ export default {
 	new_psw: "新密码",
 	psw1: "密码",
 	psw2: "再输入一次密码",
-	username: "用户名",
+	username: "姓名",
 	remember: "记住登录",
 
 	submit: "提交",
