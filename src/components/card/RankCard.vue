@@ -6,19 +6,24 @@
 		row-key="index"
 		:rows="value.map((v, idx) => ({ idx, ...v }))"
 		hide-bottom
+		v-model:pagination="pagination"
+		:rows-per-page-options="[0]"
 	/>
 </template>
 
 <script setup lang="ts">
 import { competition } from "@/lib/api/competition";
 import { useUserStore } from "@/stores/user";
-import { h } from "vue";
+import { h, ref } from "vue";
 import UserAvatar from "../UserAvatar.vue";
 const user = useUserStore();
 
 defineProps<{
 	value: competition.RankItem[];
 }>();
+const pagination = ref({
+	rowsPerPage: 0,
+});
 const cols: any = [
 	{
 		name: "index",
