@@ -7,7 +7,12 @@
 	>
 		{{ info.username[0] }}
 	</q-avatar>
-	<q-skeleton v-else :type="'QAvatar'" :size="size || '32px'"></q-skeleton>
+	<q-skeleton
+		v-else
+		class="q-mx-auto"
+		:type="'QAvatar'"
+		:size="size || '32px'"
+	></q-skeleton>
 </template>
 
 <script setup lang="ts">

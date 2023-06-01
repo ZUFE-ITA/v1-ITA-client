@@ -35,7 +35,11 @@ const cols: any = [
 		name: "name",
 		label: "Name",
 		align: "center",
-		field: (row: any) => user.get_info(row.uid).value?.username,
+		field: (row: any) => {
+			return user.users.find((v) => v.id === row.uid)
+				? user.get_info(row.uid).value?.username
+				: "loading";
+		},
 	},
 	{
 		name: "uid",
