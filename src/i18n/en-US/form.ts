@@ -2,6 +2,7 @@ export default {
 	login: "Login",
 	register: "Register",
 	verify: "Verify",
+	auth_ing: "logining",
 
 	next: "Next",
 	no: "No",

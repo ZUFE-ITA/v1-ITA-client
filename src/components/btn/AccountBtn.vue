@@ -10,7 +10,8 @@
 		</q-menu>
 	</div>
 
-	<login-btn v-if="!user.exists"></login-btn>
+	<login-btn v-if="!user.exists && !user.auth_ing"></login-btn>
+	<q-btn v-if="user.auth_ing" label="logining" rounded />
 </template>
 
 <script setup lang="ts">

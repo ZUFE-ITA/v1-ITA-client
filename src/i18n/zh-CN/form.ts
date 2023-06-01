@@ -2,6 +2,7 @@ export default {
 	login: "登录",
 	register: "注册",
 	verify: "验证",
+	auth_ing: "登录中",
 
 	verify_mail: "验证邮箱",
 	verification_code: "验证码",

@@ -8,6 +8,7 @@ export const useUserStore = defineStore("user-info", () => {
 	const exists = computed(() => info.value !== null);
 	const permission = computed(() => PermissionParser(info.value?.permission));
 	const loading_queue: any = {}; // uid=>bool 表示是否正在从服务器获取对应用户的info
+	const auth_ing = ref(false); // 是否处于记忆登录状态
 
 	function login(form: user.LoginForm) {
 		return new Promise<user.UserInfo>((resolve, reject) => {
@@ -47,10 +48,17 @@ export const useUserStore = defineStore("user-info", () => {
 	const users = reactive<user.CommonUserInfo[]>([]);
 
 	// auth
-	user.auth().then((d) => {
-		info.value = d.data;
-		users.push(d.data);
-	});
+	auth_ing.value = true;
+	user
+		.auth()
+		.then((d) => {
+			info.value = d.data;
+			users.push(d.data);
+			auth_ing.value = false;
+		})
+		.catch((error) => {
+			auth_ing.value = false;
+		});
 
 	// load info 方法不对外暴露, 因为要维持一个loading queue
 	function load_info(id: string) {
@@ -93,5 +101,6 @@ export const useUserStore = defineStore("user-info", () => {
 		login,
 		register,
 		get_info,
+		auth_ing,
 	};
 });
