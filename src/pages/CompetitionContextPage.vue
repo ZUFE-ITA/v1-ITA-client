@@ -57,7 +57,7 @@ const challenges = ref<comp.ChallengeInfo[]>([]);
 competition
 	.get_challenge_list(id)
 	.then((d) => {
-		challenges.value = d;
+		challenges.value = d.sort((a, b) => a.score - b.score);
 	})
 	.finally(() => (loading.value = false));
 const info = evt.get(id);
