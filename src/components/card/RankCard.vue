@@ -14,8 +14,10 @@
 <script setup lang="ts">
 import { competition } from "@/lib/api/competition";
 import { useUserStore } from "@/stores/user";
-import { h, ref } from "vue";
+import { h, ref, computed } from "vue";
 import UserAvatar from "../UserAvatar.vue";
+import AsyncText from "../AsyncText.vue";
+
 const user = useUserStore();
 
 defineProps<{
@@ -35,11 +37,10 @@ const cols: any = [
 		name: "name",
 		label: "Name",
 		align: "center",
-		field: (row: any) => {
-			return user.users.find((v) => v.id === row.uid)
-				? user.get_info(row.uid).value?.username
-				: "loading";
-		},
+		field: (row: any) =>
+			h(AsyncText, {
+				text: computed(() => user.get_info(row.uid).value?.username).value,
+			}),
 	},
 	{
 		name: "uid",
