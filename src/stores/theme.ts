@@ -6,9 +6,9 @@ const SAVED_KEY = "theme";
 
 export const useThemeStore = defineStore("theme", () => {
 	const behavior = ref<Theme>(
-		isNaN(localStorage.getItem(SAVED_KEY) as any as number)
-			? Theme.FollowSys
-			: Number.parseInt(localStorage.getItem(SAVED_KEY) as string)
+		Number.parseInt(
+			localStorage.getItem(SAVED_KEY) ?? Theme.FollowSys.toString()
+		)
 	);
 
 	const isDark = computed(() => {

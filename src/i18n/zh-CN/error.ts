@@ -20,7 +20,7 @@ export default {
 		deadline_has_passed: "报名已截止",
 		is_not_manual_stop: "不是手动停止的活动",
 		has_stopped: "已停止",
-    exceeded_the_upper_limit: "这里满员了~!"
+		exceeded_the_upper_limit: "这里满员了~!",
 	},
 	challenge: {
 		flag_wrong: "Flag错误~~~",
