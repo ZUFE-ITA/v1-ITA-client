@@ -24,7 +24,7 @@ onMounted(() => {
 		d.data.sort((a, b) => {
 			if (a.score != b.score) {
 				return b.score - a.score;
-			} else if (a.count != a.count) {
+			} else if (a.count != b.count) {
 				return b.count - a.count;
 			} else {
 				return a.avg_time - b.avg_time;

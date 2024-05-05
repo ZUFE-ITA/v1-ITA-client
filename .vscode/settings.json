@@ -28,5 +28,8 @@
 	"peacock.color": "#215732",
 	"[svg]": {
 		"editor.defaultFormatter": "jock.svg"
+	},
+	"[vue]": {
+		"editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
 	}
 }
