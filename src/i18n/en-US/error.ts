@@ -44,7 +44,7 @@ export default {
 		"403": "Permission Denied",
 		"404": "Oops. Nothing here...",
 	},
-  event: {
-    exceeded_the_upper_limit: "EXCEEDED THE UPPER LIMIT"
-  }
+	event: {
+		exceeded_the_upper_limit: "EXCEEDED THE UPPER LIMIT",
+	},
 };

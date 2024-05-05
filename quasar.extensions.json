@@ -1,5 +1,5 @@
 {
-  "@quasar/qmarkdown": {
-    "import_md": true
-  }
+	"@quasar/qmarkdown": {
+		"import_md": true
+	}
 }

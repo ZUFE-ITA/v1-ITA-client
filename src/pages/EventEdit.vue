@@ -174,7 +174,7 @@ const with_reward = ref(false);
 const reward_detail = ref("");
 
 const limit_count = ref(false);
-const max_count = ref('');
+const max_count = ref("");
 
 const desc = ref("");
 const longtime = ref(false);
@@ -233,7 +233,7 @@ if (id) {
 		with_reward.value = d.with_reward;
 		reward_detail.value = d.reward_detail ?? "";
 		limit_count.value = d.limit_count;
-		max_count.value = d.max_count + '';
+		max_count.value = d.max_count + "";
 		desc.value = d.desc;
 		longtime.value = d.longtime;
 		range.value = {
